@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>정언명제 관계 - 전제별 문제 (8제 + 약점 추가)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px 16px 60px;
+    background: #16332a;
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    color: #eef3ef;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 800; margin: 0 0 4px; }
+  .sub { font-size: 13px; color: #a9c9bb; margin-bottom: 20px; }
+
+  .toolbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  button {
+    background: #2c5a48;
+    color: #eef3ef;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:hover { background: #366a55; }
+
+  .card {
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .num {
+    font-weight: 800;
+    font-size: 14px;
+    color: #ffd479;
+    margin-bottom: 10px;
+  }
+
+  .premise {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .premise b { color: #eef3ef; }
+  .truth { font-weight: 800; }
+  .truth.t-true { color: #7fd99a; }
+  .truth.t-false { color: #ff8585; }
+
+  .row {
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .row:first-of-type { border-top: none; }
+  .row.weak { background: rgba(255,92,92,0.06); margin: 0 -12px; padding: 10px 12px; border-radius: 6px; }
+
+  .statement {
+    font-size: 15.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .badge {
+    background: #ff5c5c;
+    color: #16332a;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt {
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #eef3ef;
+    background: transparent;
+  }
+  .opt:hover { border-color: #ffd479; }
+  .opt.correct { background: #3f8f5f; border-color: #3f8f5f; color: #fff; }
+  .opt.wrong { background: #a33f3f; border-color: #a33f3f; color: #fff; }
+  .opt.disabled { cursor: default; }
+
+  .relation {
+    display: none;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #a9c9bb;
+    line-height: 1.5;
+  }
+  .row.answered .relation { display: block; }
+
+  .section-label {
+    font-size: 15px;
+    font-weight: 800;
+    color: #eef3ef;
+    margin: 30px 0 12px 2px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>정언명제 관계 정리 - 전제별 문제</h1>
+  <div class="sub">전제 하나가 주어지면, 나올 수 있는 세 가지 명제(전긍·전부·특긍·특부 중 나머지)의 참/거짓/판단불가를 모두 판단해보세요. 🔴 = 취약 포인트.</div>
+
+  <div class="toolbar">
+    <button onclick="shuffleMain()">🔀 문제 순서 섞기</button>
+    <button onclick="resetAll()">전체 초기화</button>
+  </div>
+
+  <div id="main"></div>
+
+  <div class="section-label">🔴 약점 추가 연습</div>
+  <div id="extra"></div>
+</div>
+
+<script>
+// 메인 8문제: 전제 하나당 나머지 3개 명제를 모두 판단
+const mainProblems = [
+  {
+    premise: "모든 새는 난다.", premiseTruth:"참",
+    rows: [
+      { statement:"모든 새는 날지 않는다.", answer:"거짓", weak:false, relation:"반대관계(전긍↔전부)" },
+      { statement:"어떤 새는 난다.", answer:"참", weak:false, relation:"대소관계(전긍→특긍)" },
+      { statement:"어떤 새는 날지 않는다.", answer:"거짓", weak:false, relation:"모순관계(전긍↔특부)" },
+    ]
+  },
+  {
+    premise: "모든 컴퓨터는 고장나지 않는다.", premiseTruth:"참",
+    rows: [
+      { statement:"모든 컴퓨터는 고장난다.", answer:"거짓", weak:false, relation:"반대관계(전긍↔전부)" },
+      { statement:"어떤 컴퓨터는 고장난다.", answer:"거짓", weak:false, relation:"모순관계(전부↔특긍)" },
+      { statement:"어떤 컴퓨터는 고장나지 않는다.", answer:"참", weak:true, relation:"대소관계(전부→특부)" },
+    ]
+  },
+  {
+    premise: "어떤 자동차는 빠르다.", premiseTruth:"참",
+    rows: [
+      { statement:"모든 자동차는 빠르다.", answer:"판단 불가", weak:false, relation:"대소관계 역방향(특긍→전긍 불가)" },
+      { statement:"모든 자동차는 빠르지 않다.", answer:"거짓", weak:false, relation:"모순관계(특긍↔전부)" },
+      { statement:"어떤 자동차는 빠르지 않다.", answer:"판단 불가", weak:false, relation:"소반대관계(특긍→특부 불가)" },
+    ]
+  },
+  {
+    premise: "어떤 책은 두껍지 않다.", premiseTruth:"참",
+    rows: [
+      { statement:"모든 책은 두껍다.", answer:"거짓", weak:false, relation:"모순관계(특부↔전긍)" },
+      { statement:"모든 책은 두껍지 않다.", answer:"판단 불가", weak:false, relation:"대소관계 역방향(특부→전부 불가)" },
+      { statement:"어떤 책은 두껍다.", answer:"판단 불가", weak:true, relation:"소반대관계(특부→특긍 불가)" },
+    ]
+  },
+  {
+    premise: "모든 가수는 노래를 잘한다.", premiseTruth:"거짓",
+    rows: [
+      { statement:"모든 가수는 노래를 잘하지 않는다.", answer:"판단 불가", weak:true, relation:"반대관계(전긍거짓→전부 불확실)" },
+      { statement:"어떤 가수는 노래를 잘한다.", answer:"판단 불가", weak:true, relation:"대소관계(전긍거짓→특긍 불확실)" },
+      { statement:"어떤 가수는 노래를 잘하지 않는다.", answer:"참", weak:false, relation:"모순관계(전긍↔특부)" },
+    ]
+  },
+  {
+    premise: "모든 요리사는 매운 음식을 잘하지 않는다.", premiseTruth:"거짓",
+    rows: [
+      { statement:"모든 요리사는 매운 음식을 잘한다.", answer:"판단 불가", weak:false, relation:"반대관계(전부거짓→전긍 불확실)" },
+      { statement:"어떤 요리사는 매운 음식을 잘한다.", answer:"참", weak:false, relation:"모순관계(전부↔특긍)" },
+      { statement:"어떤 요리사는 매운 음식을 잘하지 않는다.", answer:"판단 불가", weak:true, relation:"대소관계(전부거짓→특부 불확실)" },
+    ]
+  },
+  {
+    premise: "어떤 기자는 특종을 잡는다.", premiseTruth:"거짓",
+    rows: [
+      { statement:"모든 기자는 특종을 잡는다.", answer:"거짓", weak:true, relation:"대소관계 대우(특긍거짓→전긍거짓)" },
+      { statement:"모든 기자는 특종을 잡지 않는다.", answer:"참", weak:false, relation:"모순관계(특긍↔전부)" },
+      { statement:"어떤 기자는 특종을 잡지 않는다.", answer:"참", weak:false, relation:"소반대관계(특긍거짓→특부 참)" },
+    ]
+  },
+  {
+    premise: "어떤 어부는 새벽에 나가지 않는다.", premiseTruth:"거짓",
+    rows: [
+      { statement:"모든 어부는 새벽에 나간다.", answer:"참", weak:false, relation:"모순관계(특부↔전긍)" },
+      { statement:"모든 어부는 새벽에 나가지 않는다.", answer:"거짓", weak:true, relation:"대소관계(특부거짓→전부거짓)" },
+      { statement:"어떤 어부는 새벽에 나간다.", answer:"참", weak:false, relation:"소반대관계(특부거짓→특긍 참)" },
+    ]
+  },
+];
+
+// 약점 추가 연습: weak인 관계마다 새 테마로 단독 1문제씩
+const extraProblems = [
+  { premise:"모든 소방관은 화재현장에 출동하지 않는다.", premiseTruth:"참", statement:"어떤 소방관은 화재현장에 출동하지 않는다.", answer:"참", relation:"대소관계(전부→특부)" },
+  { premise:"어떤 경찰은 야간순찰을 하지 않는다.", premiseTruth:"참", statement:"어떤 경찰은 야간순찰을 한다.", answer:"판단 불가", relation:"소반대관계(특부→특긍 불가)" },
+  { premise:"모든 등산객은 정상까지 오른다.", premiseTruth:"거짓", statement:"모든 등산객은 정상까지 오르지 않는다.", answer:"판단 불가", relation:"반대관계(전긍거짓→전부 불확실)" },
+  { premise:"모든 수영선수는 접영을 잘한다.", premiseTruth:"거짓", statement:"어떤 수영선수는 접영을 잘한다.", answer:"판단 불가", relation:"대소관계(전긍거짓→특긍 불확실)" },
+  { premise:"모든 야구선수는 홈런을 치지 않는다.", premiseTruth:"거짓", statement:"어떤 야구선수는 홈런을 치지 않는다.", answer:"판단 불가", relation:"대소관계(전부거짓→특부 불확실)" },
+  { premise:"어떤 우주비행사는 우주복을 입는다.", premiseTruth:"거짓", statement:"모든 우주비행사는 우주복을 입는다.", answer:"거짓", relation:"대소관계 대우(특긍거짓→전긍거짓)" },
+  { premise:"어떤 변호사는 소송에서 이기지 않는다.", premiseTruth:"거짓", statement:"모든 변호사는 소송에서 이기지 않는다.", answer:"거짓", relation:"대소관계(특부거짓→전부거짓)" },
+];
+
+function buildOptions(rowEl, answer) {
+  const optDiv = document.createElement("div");
+  optDiv.className = "options";
+  ["참","거짓","판단 불가"].forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.addEventListener("click", () => {
+      if (rowEl.classList.contains("answered")) return;
+      rowEl.classList.add("answered");
+      optDiv.querySelectorAll(".opt").forEach(o => o.classList.add("disabled"));
+      if (opt === answer) {
+        btn.classList.add("correct");
+      } else {
+        btn.classList.add("wrong");
+        [...optDiv.children].find(o => o.textContent === answer).classList.add("correct");
+      }
+    });
+    optDiv.appendChild(btn);
+  });
+  return optDiv;
+}
+
+function buildMainCard(problem, idx) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const numDiv = document.createElement("div");
+  numDiv.className = "num";
+  numDiv.textContent = idx + "번";
+  card.appendChild(numDiv);
+
+  const premiseDiv = document.createElement("div");
+  premiseDiv.className = "premise";
+  const tClass = problem.premiseTruth === "참" ? "t-true" : "t-false";
+  premiseDiv.innerHTML = `'<b>${problem.premise}</b>'라는 명제가 <span class="truth ${tClass}">${problem.premiseTruth}</span>일 때,`;
+  card.appendChild(premiseDiv);
+
+  problem.rows.forEach(r => {
+    const rowEl = document.createElement("div");
+    rowEl.className = "row" + (r.weak ? " weak" : "");
+
+    const stDiv = document.createElement("div");
+    stDiv.className = "statement";
+    stDiv.innerHTML = r.statement + (r.weak ? ' <span class="badge">약점</span>' : "");
+    rowEl.appendChild(stDiv);
+
+    rowEl.appendChild(buildOptions(rowEl, r.answer));
+
+    const relDiv = document.createElement("div");
+    relDiv.className = "relation";
+    relDiv.textContent = r.relation;
+    rowEl.appendChild(relDiv);
+
+    card.appendChild(rowEl);
+  });
+
+  return card;
+}
+
+function buildExtraCard(item, idx) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const numDiv = document.createElement("div");
+  numDiv.className = "num";
+  numDiv.innerHTML = "추가 " + idx + "번";
+  card.appendChild(numDiv);
+
+  const premiseDiv = document.createElement("div");
+  premiseDiv.className = "premise";
+  const tClass = item.premiseTruth === "참" ? "t-true" : "t-false";
+  premiseDiv.innerHTML = `'<b>${item.premise}</b>'라는 명제가 <span class="truth ${tClass}">${item.premiseTruth}</span>일 때,`;
+  card.appendChild(premiseDiv);
+
+  const rowEl = document.createElement("div");
+  rowEl.className = "row weak";
+  const stDiv = document.createElement("div");
+  stDiv.className = "statement";
+  stDiv.innerHTML = item.statement + ' <span class="badge">약점</span>';
+  rowEl.appendChild(stDiv);
+  rowEl.appendChild(buildOptions(rowEl, item.answer));
+  const relDiv = document.createElement("div");
+  relDiv.className = "relation";
+  relDiv.textContent = item.relation;
+  rowEl.appendChild(relDiv);
+  card.appendChild(rowEl);
+
+  return card;
+}
+
+function renderMain(list) {
+  const container = document.getElementById("main");
+  container.innerHTML = "";
+  list.forEach((p, i) => container.appendChild(buildMainCard(p, i+1)));
+}
+
+function renderExtra(list) {
+  const container = document.getElementById("extra");
+  container.innerHTML = "";
+  list.forEach((p, i) => container.appendChild(buildExtraCard(p, i+1)));
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleMain() {
+  renderMain(shuffle(mainProblems));
+  renderExtra(shuffle(extraProblems));
+}
+
+function resetAll() {
+  renderMain(mainProblems);
+  renderExtra(extraProblems);
+}
+
+resetAll();
+</script>
+</body>
+</html>

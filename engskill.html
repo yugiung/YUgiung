@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>논리독해 표제어 — 은선진 논리독해 기본·심화·최종 10.5</title>
+<style>
+  :root {
+    --paper: #f7f4ee;
+    --paper2: #efeadf;
+    --ink: #1f2a24;
+    --ink-soft: #4a564d;
+    --line: #d9d2c1;
+    --signal: #1c6e5c;
+    --signal-soft: #e3efe9;
+    --amber: #b8722e;
+    --amber-soft: #f4e6d5;
+    --card: #fffdf8;
+    --freq: #2f8f5b;
+    --freq-soft: #e6f4ec;
+    --adv: #6d4aa8;
+    --adv-soft: #ece5f5;
+    --weak: #b8452e;
+    --weak-soft: #f5e2dd;
+    --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  header.hero {
+    padding: 6px 0 22px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 18px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    max-width: 62ch;
+  }
+  .stats {
+    display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap;
+  }
+  .stat {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: var(--paper2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 4px 9px;
+  }
+  .stat.weak-stat { color: var(--weak); border-color: #e3c3ba; background: var(--weak-soft); }
+  .legend {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #9a9282;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #b7b0a0;
+  }
+  .legend .dot.freq { background: var(--freq); }
+  .legend .dot.shared { background: var(--adv); }
+  .legend .dot.weak { background: var(--weak); }
+
+  .tabbar {
+    display: flex;
+    gap: 4px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .tabbtn {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 8px 8px 0 0;
+    border: 1.5px solid var(--ink);
+    border-bottom: none;
+    background: var(--paper2);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .tabbtn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .controls {
+    position: sticky; top: 0;
+    background: var(--paper);
+    padding: 12px 0 12px;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 14px;
+  }
+  .search {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: var(--sans);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--ink);
+    outline: none;
+  }
+  .search:focus { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--signal); color: var(--signal); }
+  .chip.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .chip.weak-chip.active {
+    background: var(--weak);
+    border-color: var(--weak);
+  }
+
+  .cat-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin: 26px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color .15s ease;
+  }
+  .item.open { border-color: var(--signal); }
+  .item.rare { opacity: 0.55; }
+  .item.rare.open { opacity: 0.85; }
+  .item.freq { border-color: #bfe0cd; background: var(--freq-soft); }
+  .item.freq.open { border-color: var(--freq); }
+  .item.shared { border-color: #d8cceb; background: var(--adv-soft); }
+  .item.shared.open { border-color: var(--adv); }
+  .item.weak { border-color: #e3ac9c; box-shadow: inset 3px 0 0 var(--weak); }
+
+  .head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+    gap: 10px;
+  }
+  .head-row:hover { background: var(--paper2); }
+  .item.freq .head-row:hover { background: #d9eee1; }
+  .item.shared .head-row:hover { background: #e2d8f0; }
+
+  .head-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .weak-check {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink-soft);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card);
+  }
+  .weak-check.checked {
+    background: var(--weak);
+    border-color: var(--weak);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .weak-check:hover { border-color: var(--weak); }
+
+  .headword {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .item.rare .headword { color: #8b8577; font-weight: 500; }
+  .item.freq .headword { color: #1c6b40; }
+  .item.shared .headword { color: #503876; }
+  .rare-tag {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    color: #9a9282;
+    background: #e9e5da;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .freq-tag {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--freq);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .shared-tag {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--adv);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .caret {
+    font-size: 12px;
+    color: var(--ink-soft);
+    transition: transform .18s ease;
+    flex-shrink: 0;
+  }
+  .item.open .caret { transform: rotate(90deg); color: var(--signal); }
+
+  .detail {
+    display: none;
+    padding: 4px 16px 16px;
+    border-top: 1px solid var(--line);
+  }
+  .item.open .detail { display: block; }
+
+  .rule-box {
+    background: var(--signal-soft);
+    border-left: 3px solid var(--signal);
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 13.5px;
+    color: #163d33;
+    margin: 12px 0 12px;
+    user-select: text;
+  }
+  .rule-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .example-box {
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+    user-select: text;
+  }
+  .example-box:hover { border-color: var(--amber); background: var(--amber-soft); }
+  .example-box.open { border-color: var(--amber); background: var(--amber-soft); }
+
+  .ex-en {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .ex-en b { color: var(--amber); font-weight: 700; }
+
+  .ex-expl {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #c9a877;
+    font-size: 13px;
+    color: #3d2f1a;
+    line-height: 1.7;
+  }
+  .claude-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #fbeecb;
+    border: 1px dashed #c9a54a;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #3d3520;
+  }
+  .claude-box + .claude-box { margin-top: 8px; }
+  .claude-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: #a8752f;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .claude-en {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .claude-en .green-part {
+    color: #1c6b40;
+    background: #dcf0e3;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .claude-tr {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 6px;
+  }
+  .claude-note {
+    font-size: 12.5px;
+    color: #5c4d2a;
+    margin-top: 6px;
+    line-height: 1.6;
+    border-top: 1px dotted #d8bc7e;
+    padding-top: 6px;
+  }
+  .expl-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a6a45;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .ex-toggle {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .ex-toggle .caret2 {
+    font-size: 11px;
+    color: #a98a5f;
+    transition: transform .18s ease;
+  }
+  .example-box.open .caret2 { transform: rotate(180deg); }
+
+  .ex-tr {
+    display: none;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px dashed #cfc7b3;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .example-box.open .ex-tr { display: block; }
+  .tr-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--ink-soft);
+    padding: 40px 0;
+    font-size: 13.5px;
+  }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+  }
+
+  .storage-note {
+    font-size: 11px;
+    color: #9a9282;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 21px; }
+    .wrap { padding: 18px 14px 60px; }
+    .tabbtn { padding: 8px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">은선진 T · 논리독해 기본·심화·최종 10.5 기반 정리</div>
+    <h1 id="pagetitle">논리 독해 표제어</h1>
+    <div class="sub" id="pagesub">문장을 원인·결과·대조·강조·양보 신호로 먼저 분류하고, 모르는 단어가 나와도 이 신호로 의미를 추론하는 훈련용 자료.</div>
+    <div class="stats">
+      <span class="stat" id="stat-total">전체 0개</span>
+      <span class="stat" id="stat-cat">0개 범주</span>
+      <span class="stat weak-stat" id="stat-weak">내 약점 0개</span>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="dot freq"></span> 초록 = 고빈도</span>
+      <span class="legend-item"><span class="dot"></span> 회색 = 저빈도</span>
+      <span class="legend-item" id="legend-shared" style="display:none;"><span class="dot shared"></span> 보라 = 기본과 겹침</span>
+      <span class="legend-item"><span class="dot weak"></span> 체크박스 = 내 약점 표시</span>
+    </div>
+    <div class="tabbar">
+      <div class="tabbtn active" id="tab-basic" onclick="switchTab('basic')">기본 10.5</div>
+      <div class="tabbtn" id="tab-adv" onclick="switchTab('adv')">심화 10.5</div>
+      <div class="tabbtn" id="tab-final" onclick="switchTab('final')">최종 10.5</div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input type="text" class="search" id="search" placeholder="표제어, 규칙, 예문으로 검색...">
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none;">검색 결과가 없어요.</div>
+
+  <footer>
+    은선진 T 「논리독해 기본·심화·최종 10.5」 스크립트 + 교재 PDF 대조 정리
+    <div class="storage-note">체크박스는 이 브라우저에 저장됩니다. 파일을 다운로드해서 직접 열거나 GitHub Pages 등에 올려서 쓰면 계속 유지되고, Claude 채팅 미리보기 안에서는 새로고침 시 초기화될 수 있어요.</div>
+  </footer>
+</div>
+
+<script>
+const DATA = { basic: [{"cat": "핵심 원리", "head": "AND / OR (등위접속사 병렬구조)", "rule": "and·or로 연결된 항목들은 해석이 어떻게 되든 문맥상 의미가 다 비슷하다. 하나만 이해되면 나머지는 몰라도 넘어간다. 강사가 '논리 해석 기법 1번'으로 지목한 최우선 원리.", "ex": "The human race cannot afford anything <b>that</b> it really needs, <b>and</b> improvement in communication often pay for themselves more swiftly than improvement in transportation.", "tr": "인류는 정말 필요한 것이라면 무엇이든 감당할 여유가 있으며, 의사소통의 향상은 운송수단의 향상보다 훨씬 더 빠르게 그 값어치를 한다.", "expl": "and로 연결된 두 절은 같은 방향의 주장이다. 앞 문장이 다소 알쏭달쏭해도 and 뒤에 이어지는 '의사소통 향상이 더 빠르다'는 구체적 진술로 앞 문장의 취지(인류는 필요한 건 다 한다)를 역추론할 수 있다.", "freq": true, "claude_ex": [{"label": "AND", "en": "<g>My dog is friendly</g>, and <g>he loves everyone he meets</g>.", "tr": "내 개는 친절하고, 만나는 사람마다 다 좋아한다.", "note": "and로 이어진 두 문장은 같은 방향의 이야기다. 앞만 읽어도 '개가 착하다'는 걸 알 수 있고, 뒤는 그걸 구체적으로 확인해줄 뿐이다. 둘 다 초록 — 어느 쪽을 먼저 읽어도 같은 뜻을 얻을 수 있다는 걸 보여준다."}]}, {"cat": "인과관계", "head": "Result in / Result from", "rule": "result 뒤 in=결과, from=원인. 방향이 반대이므로 헷갈리면 안 된다.", "ex": "Overtraining <b>results in</b> injury. The injury <b>resulted from</b> overtraining.", "tr": "오버트레이닝은 부상을 초래한다. 그 부상은 오버트레이닝에서 비롯되었다.", "expl": "같은 두 대상(오버트레이닝-부상)을 놓고 in을 쓰면 오버트레이닝이 원인, from을 쓰면 부상이 결과로 이미 제시된 뒤 원인을 캐묻는 문장이 된다. 전치사 하나로 인과 방향이 뒤집힌다.", "freq": true, "claude_ex": [{"label": "Result in", "en": "Not sleeping enough <g>results in feeling tired all day</g>.", "tr": "잠을 충분히 안 자는 것은 하루 종일 피곤함을 초래한다.", "note": "result in 뒤가 결과다. 원인(잠 부족)은 이미 나와 있고, 초록색 부분이 '그래서 생기는 일'이다."}, {"label": "Result from", "en": "<g>Feeling tired all day</g> results from not sleeping enough.", "tr": "하루 종일 피곤한 것은 잠을 충분히 안 잔 것에서 비롯된다.", "note": "이번엔 반대로 앞이 결과, 뒤가 원인이다. result from 앞의 초록색 부분이 '겪고 있는 일'이고, 뒤는 그 이유다."}]}, {"cat": "인과관계", "head": "So + 형용사/부사 + that", "rule": "so를 몰라도 앞이 원인, that절이 결과라는 인과관계만 잡으면 의미가 통한다.", "ex": "The engine was <b>so</b> worn out <b>that</b> it had to be completely overhauled.", "tr": "엔진이 너무 낡아서 완전히 정비되어야 했다.", "expl": "overhauled를 몰라도 '엔진 상태가 나쁨(원인) → 뭔가 조치가 필요함(결과)'이라는 인과 틀만 잡으면 문맥상 '정비/교체'류의 의미임을 추론할 수 있다.", "freq": true, "claude_ex": [{"label": "So ~ that", "en": "The soup was so hot that <g>I couldn't eat it right away</g>.", "tr": "국이 너무 뜨거워서 바로 먹을 수 없었다.", "note": "so 앞(뜨거움)은 원인, that 뒤(바로 못 먹음)가 결과다. 결과 부분을 초록으로 표시했다 — so 뒤 형용사가 얼마나 심했는지는 뒤 결과를 보면 알 수 있다."}]}, {"cat": "인과관계", "head": ", so that (쉼표+so that)", "rule": "앞 문장이 원인, 뒤 문장이 '그래서 그 결과'로 자연스럽게 이어진다. 앞이 안 읽히면 뒤의 결과로 원인을 역추론한다.", "ex": "Different interpretations of events are highly likely, <b>so that</b> we fall back on our own point of view.", "tr": "사건에 대한 서로 다른 해석들이 매우 있을 법하다, 그 결과 우리는 자기 자신만의 관점으로 세상을 보는 것으로 되돌아간다.", "expl": "so 앞이 원인 문장이고 so 뒤(that절)가 결과. self bias, overturn 같은 단어를 몰라도 '해석이 다양할 수 있다(원인) → 결국 자기 관점에 의존하게 된다(결과)'는 인과 골격만 잡으면 전체 문장이 부정적 통념을 다루고 있음을 알 수 있다.", "claude_ex": [{"label": ", so that", "en": "It started raining suddenly, so <g>we ran back home</g>.", "tr": "갑자기 비가 오기 시작해서, 우리는 집으로 뛰어갔다.", "note": "콤마 앞이 원인(비), 뒤가 결과(집으로 뜀). 결과 부분이 초록 — '그래서 어떻게 됐는지'가 이 구문의 핵심이다."}]}, {"cat": "인과관계", "head": "So as to / So ~ as to", "rule": "'~할 만큼 충분히 ~하다'는 정도 강조. 뒤에 오는 to절은 앞 내용의 정도를 강조하는 부연일 뿐, 핵심은 앞부분.", "ex": "A great master uses up all the material available to him, <b>so as to</b> make it impossible for a follower to be original.", "tr": "위대한 거장은 자신이 쓸 수 있는 재료를 다 써버려서, 후배가 독창적일 수 없을 정도로 만든다.", "expl": "so as to 뒤는 '얼마나 심하게'를 보여주는 정도의 극단치다. 핵심 주장(거장이 재료를 다 써버린다)은 앞에 있고, 뒤는 그 정도를 체감하게 하는 장치일 뿐이다.", "claude_ex": [{"label": "So as to", "en": "She studied every night <g>so as to pass the exam</g>.", "tr": "그녀는 시험에 합격하기 위해서 매일 밤 공부했다.", "note": "so as to 뒤가 목적이다. 앞의 행동(매일 밤 공부)이 왜 일어났는지를 뒤가 설명해주므로 뒤를 초록으로 표시했다."}]}, {"cat": "인과관계", "head": "On account of", "rule": "'account(계산하다)'의 원뜻에서 파생 — 'A를 계산에 넣은 위에서' → 'A 때문에'. 뒤가 원인.", "ex": "Tolstoy objected to excessive cleanliness <b>on account of</b> it being a badge of class.", "tr": "톨스토이는 그것이 계급의 특권이라는 이유로 지나친 청결함에 반대했다.", "expl": "on account of 뒤에 오는 'a badge of class'가 톨스토이가 반대한 진짜 이유다. 뒤의 명사(구)를 원인으로 읽으면 앞의 주장(반대함)이 왜 나왔는지 바로 연결된다.", "claude_ex": [{"label": "On account of", "en": "The game was canceled <g>on account of the heavy rain</g>.", "tr": "폭우 때문에 경기가 취소됐다.", "note": "on account of 뒤가 원인(폭우)이다. 앞의 결과(경기 취소)가 왜 일어났는지 뒤가 답해주므로 뒤를 초록으로 표시했다."}]}, {"cat": "인과관계", "head": "Out of (이유)", "rule": "'A 속에서 밖으로 나온 것' → 문맥에 따라 '~해서, ~때문에'로 원인을 나타낸다.", "ex": "He did it <b>out of</b> fear, not out of malice.", "tr": "그는 악의가 아니라 두려움 때문에 그것을 했다.", "expl": "out of 뒤 명사가 행동의 동기·원인. 뒤에 나오는 두 개의 out of 구가 대조되면(fear vs malice) 둘 다 '원인 후보'로 놓고 비교하면 된다.", "claude_ex": [{"label": "Out of", "en": "He apologized <g>out of guilt</g>, not because someone told him to.", "tr": "그는 누가 시켜서가 아니라 죄책감 때문에 사과했다.", "note": "out of 뒤가 행동의 진짜 이유(죄책감)다. 뒤를 초록으로 표시했다 — out of 뒤 명사가 곧 동기다."}]}, {"cat": "인과관계", "head": "Lest ~ (should)", "rule": "'~하지 않도록'이라는 부정적 목적을 나타낸다. should는 자주 생략된다.", "ex": "Stimulate your curiosity <b>lest</b> it (should) be killed by the dull people around you.", "tr": "네 호기심이 주변의 둔한 사람들 때문에 죽지 않도록, 그 호기심을 자극하라.", "expl": "lest절은 '피하고 싶은 부정적 결과'를 담는다. 주절의 명령(호기심을 자극하라)이 왜 필요한지, lest 뒤(호기심이 죽는 것)가 막아야 할 위험으로 제시된다.", "rare": true, "claude_ex": [{"label": "Lest", "en": "She whispered <g>lest she should wake the baby</g>.", "tr": "그녀는 아기를 깨우지 않으려고 속삭였다.", "note": "lest 뒤가 '피하고 싶은 일(아기가 깸)'이다. 앞의 행동(속삭임)이 왜 필요했는지 뒤가 설명하므로 뒤를 초록으로 표시했다."}]}, {"cat": "인과관계", "head": "As a result / Consequently / Thus / Hence", "rule": "앞 내용 전체가 원인 덩어리, 이 표현 뒤가 최종 결과 — 요약형 인과 연결어.", "ex": "Fishing pressure selects for fish that mature earlier. <b>As a result</b>, fewer eggs are produced for future generations.", "tr": "어획 압력은 더 일찍 성숙하는 물고기를 선택한다. 그 결과 미래 세대를 위한 알이 더 적게 생산된다.", "expl": "as a result 앞 문장 전체(어획 압력→조숙 개체 선호)가 원인이고, 뒤 문장이 최종 산출 결과다. 중간 과정을 몰라도 이 연결어만 보면 앞뒤가 원인-결과임을 바로 안다.", "freq": true, "claude_ex": [{"label": "As a result", "en": "He forgot his umbrella. As a result, <g>he got soaked on the way home</g>.", "tr": "그는 우산을 깜빡했다. 그 결과, 집에 가는 길에 흠뻑 젖었다.", "note": "as a result 뒤가 최종 결과다. 앞 문장(우산을 깜빡함)은 이미 안 사실이고, 초록색 뒤 부분이 그래서 생긴 새로운 사실이다."}]}, {"cat": "인과관계", "head": "Only to (목적/반전결과)", "rule": "'오직 ~하기 위해서'(목적) 또는 '그러나 결과적으로 ~하게 되다'(반전 결과) — 문맥으로만 구분한다.", "ex": "He studied hard <b>only to</b> fail the exam. He studied hard <b>only to</b> please his mother.", "tr": "그는 열심히 공부했지만 결국 시험에 떨어졌다. / 그는 오직 엄마를 기쁘게 하려고 열심히 공부했다.", "expl": "같은 구조라도 뒤에 오는 내용이 앞 행동의 '허무한 반전'이면 결과, '숨은 동기'면 목적으로 읽는다. fail은 노력과 반대되므로 반전, please는 노력의 이유로 자연스러우므로 목적이다.", "claude_ex": [{"label": "Only to (반전)", "en": "He ran to catch the bus, <g>only to see it drive away</g>.", "tr": "그는 버스를 잡으려고 뛰었지만, 결국 버스가 떠나는 것을 보았을 뿐이다.", "note": "only to 뒤가 허무한 반전 결과다. 앞의 노력(뜀)이 헛수고였다는 걸 뒤가 보여주므로 뒤를 초록으로 표시했다."}]}, {"cat": "대조·역접", "head": "However / But / Yet / Nevertheless", "rule": "앞뒤가 정반대 방향. 앞이 안 읽히면 뒤로, 뒤가 안 읽히면 앞으로 반대말을 추론한다.", "ex": "The traditional Chinese tea trade was slow and non-industrial. <b>However</b>, India adopted industrial methods and large plantations.", "tr": "전통적인 중국의 차 무역은 느리고 비산업적이었다. 하지만 인도는 산업적 방식과 대규모 농장을 도입했다.", "expl": "however 앞뒤는 항상 반대 성질(비산업적 vs 산업적)을 이룬다. 앞부분이 몰라도 however 뒤에서 '산업적 방식'이 나오면 앞은 그 반대(비산업적)였다고 역추론할 수 있다.", "freq": true, "claude_ex": [{"label": "However", "en": "<g>I wanted to go to the party</g>. However, <g>I had too much homework</g>.", "tr": "나는 파티에 가고 싶었다. 하지만 숙제가 너무 많았다.", "note": "however 앞뒤가 정반대다. 둘 다 초록으로 표시했다 — 어느 한쪽만 이해해도 반대말을 추론해서 나머지를 알 수 있다는 걸 보여준다."}]}, {"cat": "대조·역접", "head": "On the other hand / In contrast", "rule": "두 대상을 나란히 놓고 반대 성질을 비교하는 신호. 이 앞뒤는 항상 대구를 이룬다.", "ex": "Older investors take less risk. <b>In contrast</b>, younger investors take more risk because they have a longer time horizon.", "tr": "나이 든 투자자는 위험을 덜 감수한다. 반면 젊은 투자자는 더 긴 시간 지평선을 가졌기 때문에 더 많은 위험을 감수한다.", "expl": "in contrast 앞뒤 문장은 주어(older/younger)와 서술(less/more risk)이 정확히 대칭을 이룬다. 이 대칭 구조 자체가 정답 단서로 자주 쓰인다.", "freq": true, "claude_ex": [{"label": "On the other hand", "en": "<g>My brother loves spicy food</g>. On the other hand, <g>I can't handle any spice at all</g>.", "tr": "내 동생은 매운 음식을 좋아한다. 반면에 나는 매운 것을 전혀 못 먹는다.", "note": "however와 완전히 같은 기능. 두 사람의 정반대 취향을 대비시키므로 앞뒤 둘 다 초록으로 표시했다."}]}, {"cat": "대조·역접", "head": "Not A but B", "rule": "'A가 아니라 B다' — 비교·대조·역접의 핵심어. 하나가 안 읽혀도 나머지로 반대 의미를 추론한다.", "ex": "The material a film director has is <b>not</b> made up of actual things <b>but</b> merely images of them.", "tr": "영화감독이 가진 자료는 실제의 것들로 이루어진 게 아니라 단지 그것들의 이미지로 이루어져 있다.", "expl": "not 뒤(실제의 것)와 but 뒤(이미지)가 정면으로 대립한다. 둘 중 하나만 이해돼도 나머지는 자동으로 반대 의미로 채워 넣을 수 있다.", "freq": true, "claude_ex": [{"label": "Not A but B", "en": "The problem was <g>not the price</g> but <g>the quality</g>.", "tr": "문제는 가격이 아니라 품질이었다.", "note": "not 뒤(A)는 부정되고 but 뒤(B)가 진짜 정답이다. 둘 다 초록으로 표시했다 — 둘을 대비시켜야 어느 쪽이 진짜인지 드러난다."}]}, {"cat": "대조·역접", "head": "Not so much A as B", "rule": "'A라기보다는 B다' — as~as 동등비교 논리로 B를 강조한다. 정답은 항상 B.", "ex": "It was <b>not so much</b> aggression <b>as</b> cooperation that gave early humans their edge.", "tr": "초기 인류에게 우월함을 준 것은 공격성이라기보다는 협동력이었다.", "expl": "A(aggression)는 부정되고 B(cooperation)가 실제 원인으로 강조된다. 문제에서 이 구문이 나오면 정답은 거의 항상 B쪽 개념과 연결된다.", "claude_ex": [{"label": "Not so much A as B", "en": "He is <g>not so much lazy</g> as <g>simply tired</g> these days.", "tr": "그는 요즘 게으르다기보다는 그냥 피곤한 것이다.", "note": "A(게으름)는 부정되고 B(피곤함)가 진짜 이유로 강조된다. 대비를 보여주기 위해 둘 다 초록으로 표시했다."}]}, {"cat": "대조·역접", "head": "Anything but / Nothing but / Cannot but / But for", "rule": "but이 '~을 제외하고'라는 전치사로 쓰인 관용구. anything but=절대 아님, nothing but=오직 그것뿐, cannot but=~하지 않을 수 없음, but for=~이 없었다면.", "ex": "He is <b>anything but</b> a coward. She could <b>not but</b> smile. <b>But for</b> your help, I couldn't have passed.", "tr": "그는 절대 겁쟁이가 아니다. 그녀는 웃지 않을 수 없었다. 네 도움이 없었다면 나는 합격하지 못했을 것이다.", "expl": "네 표현 모두 but을 '제외'라는 원뜻으로 풀면 이해된다: '겁쟁이인 것을 제외하면 다 될 수 있다'=절대 겁쟁이 아님, '웃는 것을 제외하고 할 수 있는 게 없다'=웃을 수밖에 없음.", "claude_ex": [{"label": "Anything but", "en": "That movie was <g>anything but boring</g> — it was thrilling from start to end.", "tr": "그 영화는 지루하기는커녕, 시작부터 끝까지 스릴 넘쳤다.", "note": "anything but 뒤(boring)가 강하게 부정되는 대상이다. 뒤를 초록으로 표시했다 — '그것만 빼고 다 됨' = 절대 그게 아님."}, {"label": "Cannot but", "en": "The joke was so funny that I <g>could not but laugh</g>.", "tr": "그 농담이 너무 웃겨서 나는 웃지 않을 수 없었다.", "note": "cannot but 뒤(웃음)가 결국 하게 되는 행동이다. 뒤를 초록으로 표시했다."}]}, {"cat": "대조·역접", "head": "Even (부사)", "rule": "'심지어 ~조차도' — 앞 내용을 부연 강조. 뒤 내용은 앞보다 더 강하거나 비슷한 강도.", "ex": "<b>Even</b> our fundamentally incomplete knowledge does powerful work.", "tr": "심지어 우리의 근본적으로 불완전한 지식조차도 강력한 작용을 한다.", "expl": "even 뒤의 '불완전한 지식'은 원래 힘이 약할 것 같은 대상인데, 그런 것조차 강력하다는 것은 문장의 주장(지식의 힘)을 극단적으로 강조하는 장치다.", "freq": true, "claude_ex": [{"label": "Even", "en": "The math test was <g>so easy that even my little sister could solve it</g>.", "tr": "그 수학 시험은 너무 쉬워서 내 여동생조차 풀 수 있었다.", "note": "even 뒤 대상(여동생)은 원래 못할 것 같은 존재다. 그런 대상까지 해낸다는 게 강조점이므로 뒤를 초록으로 표시했다."}]}, {"cat": "대조·역접", "head": "Despite / In spite of", "rule": "뒤에 나오는 것과 반대되는 결과가 주절에 나온다는 신호. 명사(구)를 취하는 양보 표현.", "ex": "<b>Despite</b> its difficulties, psychology retains real scientific value.", "tr": "어려움에도 불구하고, 심리학은 진정한 과학적 가치를 지닌다.", "expl": "despite 뒤(어려움=부정적)와 주절(과학적 가치=긍정적)이 반대 방향이다. 주절의 핵심 주장이 despite 뒤의 반론을 이미 감안하고도 성립한다는 뜻이다.", "claude_ex": [{"label": "Despite", "en": "Despite the rain, <g>we went to the park</g>.", "tr": "비가 왔는데도, 우리는 공원에 갔다.", "note": "despite 뒤에 오는 명사(the rain)는 그냥 걸림돌일 뿐이고, 화자가 진짜 하고 싶은 말은 언제나 뒤에 나오는 주절(we went to the park)이다. 그래서 주절을 초록색으로 표시했다 — despite 뒤 명사는 '무시해도 되는 조건', 주절이 '진짜 일어난 일'."}, {"label": "In spite of", "en": "In spite of the noise, <g>she fell asleep fast</g>.", "tr": "시끄러운데도, 그녀는 빨리 잠들었다.", "note": "in spite of는 despite와 뜻과 역할이 완전히 같다. 앞의 방해 요소(the noise)는 그냥 배경일 뿐, 초록색으로 표시된 뒤 주절이 실제로 일어난 진짜 사건이다."}]}, {"cat": "대조·역접", "head": "Whereas / While (대조)", "rule": "두 절을 나란히 대조. however와 달리 한 문장 안에서 대조를 명시한다.", "ex": "Older investors avoid risk, <b>whereas</b> younger investors embrace it.", "tr": "나이 든 투자자는 위험을 피하는 반면, 젊은 투자자는 그것을 받아들인다.", "expl": "whereas는 한 문장 속에서 앞뒤 절의 주어를 정확히 대비시킨다. 문장 삽입·순서배열 문제에서 whereas가 있으면 그 앞뒤가 대칭 정보임을 바로 확인할 수 있다.", "claude_ex": [{"label": "Whereas", "en": "<g>My room is always messy</g>, whereas <g>my sister's room is always neat</g>.", "tr": "내 방은 항상 지저분한 반면, 내 여동생 방은 항상 깔끔하다.", "note": "whereas는 한 문장 안에서 앞뒤를 나란히 대조시킨다. 둘 다 초록으로 표시했다 — 대칭 구조 자체가 핵심이다."}]}, {"cat": "강조구문", "head": "It is ~ that (강조구문)", "rule": "it is와 that 사이의 내용이 글쓴이가 가장 강조하려는 말 = 핵심어이자 주제문.", "ex": "<b>It is</b> philosophy, not science, <b>that</b> teaches us the difference between right and wrong.", "tr": "옳고 그름의 차이를 가르치는 것은 과학이 아니라 철학이다.", "expl": "it is와 that 사이의 'philosophy, not science'가 통째로 강조 대상이다. not A but B 구조와 겹쳐서 대조까지 동시에 표시하고 있어 이중으로 핵심임을 알 수 있다.", "freq": true, "claude_ex": [{"label": "It is ~ that", "en": "It was <g>my little brother</g> that broke the window, not me.", "tr": "창문을 깬 건 나가 아니라 내 남동생이었다.", "note": "it is와 that 사이(내 남동생)가 강조되는 핵심 정보다. 그 부분만 초록으로 표시했다."}]}, {"cat": "강조구문", "head": "It is important/necessary/essential that", "rule": "중요성을 나타내는 표현은 예외 없이 핵심 내용이자 주제문이다.", "ex": "<b>It is essential that</b> parents live their own lives fully and deepen their self-understanding.", "tr": "부모가 자기 삶을 충만히 살고 자기 이해를 깊게 하는 것이 필수적이다.", "expl": "important/necessary/essential 뒤에 오는 that절은 글쓴이가 독자에게 전달하려는 핵심 주장이다. 이 문장이 지문 초반에 나오면 그대로 주제문일 확률이 매우 높다.", "freq": true, "claude_ex": [{"label": "It is important that", "en": "It is important that <g>you tell the truth, even when it's hard</g>.", "tr": "힘들더라도 진실을 말하는 것이 중요하다.", "note": "that절이 글쓴이가 진짜 하고 싶은 말이다. that 뒤 전체를 초록으로 표시했다."}]}, {"cat": "강조구문", "head": "인용구 (Quotation)", "rule": "유명인의 말·속담 인용은 언제나 주제를 나타낸다. 인용구 뒤에 역접이 오면 그 반대말이 주제가 된다.", "ex": "As Shakespeare's line suggests, a rose is a natural object; a painting is a work of art. Yet critics argue the boundary is not always so clear.", "tr": "셰익스피어의 구절이 암시하듯, 장미는 자연물이고 그림은 예술 작품이다. 그러나 비평가들은 그 경계가 항상 그렇게 명확하지는 않다고 주장한다.", "expl": "이 인용구(장미=자연물, 그림=예술 작품)는 글이 시작하는 발판일 뿐, 진짜 결론이 아닐 수도 있다. 그래서 뒤에 나오는 Yet 이후의 반박까지 읽어야 진짜 주제를 확인할 수 있다.", "claude_ex": [{"label": "인용구", "en": "As my grandmother always says, <g>\"Slow and steady wins the race.\"</g>", "tr": "할머니가 늘 말씀하시듯, \"천천히 그리고 꾸준히 하는 게 이긴다.\"", "note": "인용된 말 자체가 글의 핵심 주장이다. 인용 부분을 초록으로 표시했다 — 인용구는 글쓴이의 생각을 대신 말해주는 장치다."}]}, {"cat": "강조구문", "head": "반복 표현 (Repetition / Paraphrasing)", "rule": "같은 개념이 다른 단어로 계속 바뀌어 나오는 것(패러프레이징)은 핵심어·주제의 표시다.", "ex": "collaboration, collective thinking, connection, integration — 이 지문에서 이 단어들은 전부 하나의 개념을 가리킨다.", "tr": "협동, 집단적 사고, 연결, 통합.", "expl": "네 단어의 사전적 의미는 다르지만 이 지문 안에서는 전부 '개인이 아닌 함께'라는 하나의 주제어의 변주다. 이런 반복이 보이면 그게 곧 정답 방향이다.", "claude_ex": [{"label": "반복 표현", "en": "The team worked <g>together</g>. They shared ideas, helped each other, and always acted <g>as one group</g>.", "tr": "그 팀은 함께 일했다. 아이디어를 나누고, 서로 도왔고, 항상 하나의 집단처럼 행동했다.", "note": "'together'와 'as one group'은 다른 단어지만 같은 뜻(협동)을 반복한다. 두 표현 다 초록으로 표시했다 — 반복되는 게 곧 핵심어다."}]}, {"cat": "강조구문", "head": "Not until ~ that", "rule": "'~할 때까지는 아니다' → '~하고 나서야 비로소 ~하다'. until 뒤 사건이 일어난 후에야 주절이 성립한다.", "ex": "<b>Not until</b> people learned to make things of metal <b>that</b> civilization took its first step.", "tr": "사람들이 금속으로 물건을 만드는 법을 배우고 나서야 비로소 문명이 첫걸음을 내디뎠다.", "expl": "not until 뒤(금속 다루기)가 선행 조건, that 뒤(문명 시작)가 그 이후에야 성립하는 결과다. '그 전에는 문명이 없었다'는 부정의 뉘앙스가 강조된다.", "claude_ex": [{"label": "Not until ~ that", "en": "Not until I lost my phone <g>did I realize how much I depended on it</g>.", "tr": "휴대폰을 잃어버리고 나서야 비로소 내가 그것에 얼마나 의존했는지 깨달았다.", "note": "not until 뒤(잃어버림)는 조건, that/도치절 뒤(깨달음)가 그 이후에야 성립하는 결과다. 결과 부분을 초록으로 표시했다."}]}, {"cat": "강조구문", "head": "중요성·필연 강조 부사 (Obviously / Clearly / Indeed)", "rule": "필자가 당연하다고 여기는 내용 — 대개 주제와 직결된 전제로, 뒤에 나오는 진술을 강한 근거로 재확인한다.", "ex": "<b>Indeed</b>, managers act as an intersection of all communication functions in the organization.", "tr": "실제로 관리자는 조직 내 모든 의사소통 기능의 교차로 역할을 한다.", "expl": "indeed는 앞의 주장(자유로운 정보 흐름이 필요하다)을 다시 한번 확신을 담아 재진술하는 역할이다. 이 문장이 곧 지문의 결론적 요약일 가능성이 크다.", "claude_ex": [{"label": "Indeed", "en": "The plan sounded risky. Indeed, <g>three experts had already warned against it</g>.", "tr": "그 계획은 위험해 보였다. 실제로, 이미 세 명의 전문가가 그것에 반대하며 경고했었다.", "note": "indeed 뒤가 앞 주장을 더 강한 근거로 재확인해준다. 뒤를 초록으로 표시했다."}]}, {"cat": "양보", "head": "Although / Even though / Even if", "rule": "'비록 ~일지라도' — 주절의 핵심 내용을 강조하기 위한 부연. 양보절이 길어도 주절만 잡으면 된다.", "ex": "<b>Although</b> it's appropriate to describe some animal signals as conveying information, in many other cases they do not.", "tr": "일부 동물 신호를 정보 전달로 묘사하는 것이 적절하지만, 다른 많은 경우에는 그렇지 않다.", "expl": "although절(정보 전달로 볼 수 있는 경우)은 일단 인정된 뒤, 주절(그렇지 않은 경우도 많음)이 실제 강조점이다. 양보절은 읽기 힘들면 건너뛰고 주절만 잡아도 핵심을 놓치지 않는다.", "freq": true, "claude_ex": [{"label": "Although", "en": "Although <g>it was raining hard</g>, <g>we still went hiking</g>.", "tr": "비가 세차게 내렸지만, 우리는 그래도 등산을 갔다.", "note": "although절(비)은 일단 인정되고, 주절(그래도 감)이 진짜 강조점이다. 둘 다 초록 — 양보와 실제 행동의 대비 자체가 핵심이다."}]}, {"cat": "양보", "head": "For all / With all", "rule": "'A에도 불구하고'로 자주 쓰이지만 문맥에 따라 '모든 A를 위하여'도 된다 — 문맥 판단이 필수다.", "ex": "<b>For all</b> its difficulties, psychological research retains scientific value.", "tr": "그 모든 어려움에도 불구하고, 심리학 연구는 과학적 가치를 유지한다.", "expl": "difficulties처럼 부정적 명사가 오면 '~에도 불구하고'로, 긍정적 명사가 오면 다른 뜻일 수 있다. 뒤 명사의 긍정/부정 색깔이 for all의 해석을 결정한다.", "claude_ex": [{"label": "For all", "en": "For all <g>his mistakes</g>, <g>he is still my best friend</g>.", "tr": "그 모든 실수에도 불구하고, 그는 여전히 나의 가장 친한 친구다.", "note": "for all 뒤(실수)는 부정적 배경, 주절(여전히 친구)이 그것을 뒤집는 진짜 결론이다. 대비를 위해 둘 다 초록으로 표시했다."}]}, {"cat": "양보", "head": "If (양보의 뜻)", "rule": "if의 세 가지 뜻(조건·간접의문·양보) 중 문맥상 '~일지라도'로 해석되는 경우.", "ex": "<b>If</b> improbably, freshwater organisms carry the chemical signature of the sea.", "tr": "있음직하지 않을지라도, 민물 생명체는 바다의 화학적 특징을 지니고 있다.", "expl": "if 뒤에 조건절 없이 형용사(improbably)만 덜렁 남으면 '조건'으로 해석이 안 된다. 이럴 때는 '~일지라도'라는 양보 삽입구로 읽는다.", "claude_ex": [{"label": "If (양보)", "en": "The food was, if <g>a little cold</g>, still <g>delicious</g>.", "tr": "음식은 약간 식었을지라도, 여전히 맛있었다.", "note": "if절(약간 식음)을 빼도 핵심 주장(맛있음)은 그대로 남는다. 이 테스트를 보여주기 위해 둘 다 초록으로 표시했다."}]}, {"cat": "부연설명·동격", "head": "콜론(:) / 세미콜론(;) / 하이픈(—)", "rule": "앞뒤가 부연설명 관계. 앞이 이해되면 뒤는 안 읽어도 되고, 앞이 안 되면 뒤로 추론한다.", "ex": "We are naive realists<b>:</b> we believe our culture mirrors reality exactly as it is.", "tr": "우리는 순진한 현실주의자다: 우리는 우리 문화가 현실을 있는 그대로 비춘다고 믿는다.", "expl": "콜론 뒤 문장은 앞의 'naive realists'라는 용어를 풀어서 정의한 것이다. 용어가 낯설어도 콜론 뒤를 읽으면 뜻이 그대로 나온다.", "claude_ex": [{"label": "콜론(:)", "en": "She had one rule: <g>never lie to your friends</g>.", "tr": "그녀에게는 한 가지 원칙이 있었다: 친구에게는 절대 거짓말하지 않는다.", "note": "콜론 뒤가 앞(원칙)을 구체적으로 풀어준다. 뒤를 초록으로 표시했다 — 콜론 앞이 막연해도 뒤를 읽으면 뜻이 나온다."}]}, {"cat": "부연설명·동격", "head": "In that", "rule": "'the point'와 같은 동격 명사가 생략된 구조 — '~라는 점에서'로 이유·근거를 부연한다.", "ex": "Music surpasses poetry <b>in that</b> it is a universal language common to all nations.", "tr": "음악은 모든 나라에 공통된 보편적 언어라는 점에서 시를 능가한다.", "expl": "in that 뒤가 앞 주장(음악이 시를 능가함)의 근거다. that절이 곧 이유이므로 because와 거의 같은 기능을 한다고 보면 된다.", "claude_ex": [{"label": "In that", "en": "This plan is better in that <g>it costs less money</g>.", "tr": "이 계획은 돈이 덜 든다는 점에서 더 낫다.", "note": "in that 뒤가 앞 주장(더 낫다)의 근거다. 뒤를 초록으로 표시했다 — in that은 because와 거의 같다."}]}, {"cat": "부연설명·동격", "head": "분사구문 (, ~ing / , p.p.)", "rule": "주절의 부가·추가 설명. 주절이 이해되면 분사구문은 넘어가도 되고, 주절이 안 될 때 분사구문으로 역추론한다.", "ex": "Twin sirens hide in the sea of history, <b>luring</b> those who seek to understand the past astray.", "tr": "쌍둥이 사이렌은 역사의 바다에 숨어서, 과거를 이해하려는 사람들을 잘못된 길로 유혹한다.", "expl": "콤마 뒤 luring 이하는 주절(사이렌이 숨어있다)에 대한 추가 설명(무엇을 하며 숨어있는지)이다. 주절만 잡아도 뜻은 통하고, 분사구문은 디테일을 더할 뿐이다.", "claude_ex": [{"label": "분사구문", "en": "<g>She finished her homework early</g>, giving herself time to watch a movie.", "tr": "그녀는 숙제를 일찍 끝내서, 영화를 볼 시간을 스스로에게 만들어줬다.", "note": "주절(숙제를 일찍 끝냄)이 핵심이고, 분사구문(영화 볼 시간을 만듦)은 그 결과를 덧붙인 설명이다. 주절을 초록으로 표시했다."}]}, {"cat": "부연설명·동격", "head": "That is (to say) / Namely", "rule": "앞 내용을 다른 말로 다시 정의 — 동격·재진술 신호.", "ex": "They are naive realists, <b>that is to say</b>, they believe their own view of the world is simply objective reality.", "tr": "그들은 순진한 현실주의자다. 다시 말해, 그들은 자기 세계관이 그냥 객관적 현실이라고 믿는다.", "expl": "that is to say 뒤는 앞 용어(naive realists)를 쉬운 말로 풀어쓴 것이다. 앞이 추상적이고 어려워도 뒤를 읽으면 구체적으로 무슨 뜻인지 알 수 있다.", "claude_ex": [{"label": "That is to say", "en": "He is a picky eater — that is to say, <g>he only eats about five different foods</g>.", "tr": "그는 입맛이 까다롭다 — 다시 말해, 그는 겨우 대여섯 가지 음식만 먹는다.", "note": "that is to say 뒤가 앞의 애매한 말(까다로움)을 구체적으로 풀어준다. 뒤를 초록으로 표시했다."}]}, {"cat": "목적·정도·결과", "head": "Too ~ to (문맥 이중성)", "rule": "'너무 ~해서 ~할 수 없다'가 기본이지만, 문맥상 '매우 ~해서 결국 ~했다'로 뒤집히기도 한다. 논리적으로 말이 되는 쪽을 택한다.", "ex": "She was <b>too</b> deeply impressed by the scene of war victims <b>to</b> write to the government about it.", "tr": "그녀는 전쟁 희생자들의 광경에 너무 깊이 감명받아서 결국 정부에 편지를 썼다.", "expl": "'너무 감명받아서 편지를 못 썼다'로 읽으면 앞뒤가 안 맞는다(감명받았다면 오히려 행동할 동기가 생김). 문맥상 '매우 감명받아서 실제로 편지를 썼다'는 긍정적 결과로 읽어야 자연스럽다.", "claude_ex": [{"label": "Too ~ to", "en": "She was <g>too excited to sleep</g> the night before the trip.", "tr": "여행 전날 밤, 그녀는 너무 신나서 잠을 잘 수 없었다.", "note": "too 형용사부터 to 동사까지가 하나의 뜻(너무 ~해서 ~못함)이므로 전체를 초록으로 표시했다."}]}, {"cat": "목적·정도·결과", "head": "Not too ~ to", "rule": "'너무 ~하지 않아서 ~할 수 있었다'. 문맥에 맞는 형용사 의미를 골라야 한다.", "ex": "The Romans were <b>not too</b> proud <b>to</b> learn useful lessons even from the peoples they conquered.", "tr": "로마인들은 너무 거만하지 않아서 정복한 민족들에게서도 유용한 교훈을 배웠다.", "expl": "전 세계를 지배했다는 배경과 '배웠다'는 결과를 연결하려면 '거만하지 않았다(겸손했다)'는 긍정적 의미로 읽어야 한다. proud를 무조건 '자랑스러운'으로만 고정하면 문맥이 깨진다.", "claude_ex": [{"label": "Not too ~ to", "en": "He was <g>not too tired to help</g> his mom with the dishes.", "tr": "그는 너무 피곤하지 않아서 엄마의 설거지를 도울 수 있었다.", "note": "not too ~ to 전체가 '~할 수 있을 만큼 괜찮았다'는 긍정적 뜻이므로 전체를 초록으로 표시했다."}]}, {"cat": "목적·정도·결과", "head": "Be not (too) ready/forward to V", "rule": "'너무 쉽게 ~하지 마라'는 뜻의 경고성 표현. ready to=믿을 준비가 됨, forward to=앞장서서 나섬 — 둘 다 '성급함'을 나타낸다.", "ex": "Be not too <b>ready to</b> believe or report strange stories, and yet be not too <b>forward to</b> contradict him.", "tr": "이상한 이야기를 너무 쉽게 믿거나 옮기지 말고, 그렇다고 너무 앞서서 반박하지도 마라.", "expl": "ready(성급히 믿음)와 forward(성급히 반박함)는 서로 반대 방향의 성급함이다. 이 문장은 '두 극단(맹신·즉각반박) 다 피하고 신중하라'는 균형 잡힌 주제를 전달한다.", "rare": true, "claude_ex": [{"label": "Be not ready to", "en": "Be not too <g>ready to believe</g> every rumor you hear at school.", "tr": "학교에서 듣는 모든 소문을 너무 쉽게 믿지 마라.", "note": "ready to 뒤(믿음)가 하지 말아야 할 성급한 행동이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "목적·정도·결과", "head": "It is only too ~ to", "rule": "'only too'는 '단지 매우'라는 강조 — '너무 ~해서 못한다'가 아니라 '매우 ~하다'는 뜻이다.", "ex": "<b>It is only too</b> dangerous <b>to</b> put all your eggs in one basket.", "tr": "모든 달걀을 한 바구니에 담는 것은 그야말로 매우 위험하다.", "expl": "only too dangerous는 '위험해서 못한다'는 뜻이 아니라 '정말 위험하다'는 강한 긍정 진술이다. to put은 진주어로, 앞의 위험성을 설명하는 대상이다.", "claude_ex": [{"label": "It is only too ~ to", "en": "It is only too <g>dangerous to run across a busy street</g>.", "tr": "붐비는 길을 뛰어서 건너는 것은 그야말로 매우 위험하다.", "note": "only too 뒤부터가 '정말 위험하다'는 강한 긍정 진술이다. 그 부분을 초록으로 표시했다 — '못한다'가 아니라 '매우 그렇다'는 뜻."}]}, {"cat": "목적·정도·결과", "head": "It is no use ~ing", "rule": "'~해봐야 소용없다' — 무의미한 행동을 지적하는 관용 표현. 부정적 결론을 이끈다.", "ex": "<b>It is no use</b> crying over spilt milk.", "tr": "엎질러진 우유를 두고 울어봐야 소용없다.", "expl": "no use 뒤 동명사가 '해봐야 헛수고인 행동'이다. 이 표현이 나오면 글쓴이는 그 행동 대신 다른(더 생산적인) 접근을 제안하는 흐름으로 이어질 가능성이 크다.", "rare": true, "claude_ex": [{"label": "It is no use ~ing", "en": "It is no use <g>crying over a broken toy</g> — just ask for a new one.", "tr": "부서진 장난감을 두고 울어봐야 소용없다 — 그냥 새것을 달라고 해라.", "note": "no use 뒤가 '해봐야 소용없는 행동'이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "목적·정도·결과", "head": "Too apt to be p.p.", "rule": "'be apt to'='~하기 쉽다' — '너무 쉽게 ~된다'는 뜻으로 해석한다.", "ex": "This basic condition of happiness <b>is too apt to</b> be forgotten in civilized society.", "tr": "행복의 이 기본 조건은 문명화된 사회에서 너무 쉽게 잊히곤 한다.", "expl": "apt to는 '경향이 있다'는 뜻이므로 too apt to be forgotten은 '잊혀지는 경향이 매우 강하다'는 뜻. '문명사회일수록 본능적 만족을 잊기 쉽다'는 지문 전체 주제와 직결된다.", "rare": true, "claude_ex": [{"label": "Too apt to be", "en": "Small promises are <g>too apt to be forgotten</g> in a busy day.", "tr": "바쁜 하루 속에서 작은 약속들은 너무 쉽게 잊히곤 한다.", "note": "too apt to be 뒤(잊힘)가 '자주 그렇게 되는 일'이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "지시어·접속어", "head": "This / That / These / Those / Such", "rule": "반드시 앞 문장의 특정 대상을 가리킨다. 이게 앞 문장과 안 이어지면 그 자리가 '문맥의 단절' 지점 — 문장삽입 문제의 핵심 단서.", "ex": "<b>These</b> bits of whale skin were later found to carry vital genetic data.", "tr": "이 고래 피부 조각들은 나중에 중요한 유전 정보를 담고 있는 것으로 밝혀졌다.", "expl": "these가 가리키는 '고래 피부 조각'이 앞 문장에 없다면, 그 사이에 고래 피부 조각을 처음 언급하는 문장(제시문)이 삽입되어야 한다는 뜻이다.", "freq": true, "claude_ex": [{"label": "This/That", "en": "<g>My cat knocked a glass off the table</g>. This happened right before we had guests over.", "tr": "내 고양이가 탁자에서 컵을 떨어뜨렸다. 이 일은 손님들이 오기 직전에 일어났다.", "note": "this가 가리키는 대상(고양이 사건)이 앞 문장에 있다. 그 대상을 초록으로 표시했다 — this/that이 나오면 반드시 앞에서 무엇을 가리키는지부터 찾아야 한다."}]}, {"cat": "지시어·접속어", "head": "In addition / Furthermore / Moreover", "rule": "앞 내용과 비슷한 방향의 정보를 추가 — 반대 내용이 오면 문맥이 이상하다는 신호다.", "ex": "<b>Furthermore</b>, India adopted large-scale plantations and automated much of the process.", "tr": "게다가 인도는 대규모 농장을 도입하고 그 과정의 상당 부분을 자동화했다.", "expl": "furthermore 뒤는 앞 내용(인도의 산업적 방식)과 같은 방향으로 정보를 더 쌓는다. 앞뒤가 반대되는 내용이면 furthermore 사용이 틀린 것이므로, 문장 순서 문제에서 이 자체가 단서가 된다.", "freq": true, "claude_ex": [{"label": "In addition", "en": "The hotel room was clean and spacious. In addition, <g>the staff were extremely kind</g>.", "tr": "그 호텔 방은 깨끗하고 넓었다. 게다가, 직원들도 매우 친절했다.", "note": "in addition 뒤가 앞과 같은 방향(좋은 점)으로 정보를 추가한다. 뒤를 초록으로 표시했다."}]}, {"cat": "지시어·접속어", "head": "In fact / Indeed (강한 재확인)", "rule": "앞 진술을 더 강한 근거로 재확인·강조한다.", "ex": "<b>In fact</b>, the total number of orangutans has declined by at least 85% over the last 75 years.", "tr": "실제로 오랑우탄의 전체 개체수는 지난 75년간 최소 85% 감소했다.", "expl": "in fact 뒤는 앞의 (겉보기) 진술을 뒤집거나 더 구체적인 진짜 데이터로 보강한다. 여기서는 '개체수가 늘어난 것처럼 보인다'는 앞 통념을 뒤집는 실제 수치로 기능한다.", "claude_ex": [{"label": "In fact", "en": "People thought the test would be easy. In fact, <g>almost everyone failed it</g>.", "tr": "사람들은 시험이 쉬울 거라 생각했다. 실제로는, 거의 모두가 낙제했다.", "note": "in fact 뒤가 앞의 예상을 뒤집는 실제 사실이다. 뒤를 초록으로 표시했다."}]}, {"cat": "비교", "head": "As ~ as (동등비교 강조)", "rule": "단순 비교가 아니라 두 대상이 '똑같이 나쁘다/중요하다'는 강조 용법으로 자주 쓰인다.", "ex": "It is <b>just as</b> wrong to use moral means for immoral ends <b>as</b> it is to use immoral means for moral ends.", "tr": "부도덕한 목적을 위해 도덕적 수단을 쓰는 것은, 도덕적 목적을 위해 부도덕한 수단을 쓰는 것만큼이나 잘못됐다.", "expl": "as~as가 '두 개의 나쁨'을 동등하게 놓아 둘 다 틀렸다는 결론을 강조한다. 하나만 이해돼도 나머지는 '똑같이 틀렸다'로 자동 채워진다.", "freq": true, "claude_ex": [{"label": "As ~ as", "en": "Cheating on a small test is <g>just as wrong as</g> cheating on a final exam.", "tr": "작은 시험에서 부정행위를 하는 것은 기말고사에서 부정행위를 하는 것만큼이나 잘못됐다.", "note": "as~as가 두 가지 나쁨을 동등하게 놓아 둘 다 틀렸다는 걸 강조한다. as~as 부분 전체를 초록으로 표시했다."}]}, {"cat": "비교", "head": "The same as / Identical to", "rule": "두 대상의 완전한 동일성을 강조 — 차이가 없다는 게 핵심 주장이다.", "ex": "The sound a violinist hears is <b>the same as</b> the sound heard by the audience standing next to him.", "tr": "바이올리니스트가 듣는 소리는 그의 옆에 서 있는 청중이 듣는 소리와 똑같다.", "expl": "the same as는 '차이 없음'을 명시한다. 이 문장 앞에는 대개 '가수는 다르다(자기 뼈로 들어서 다르게 들림)'는 대조 정보가 있어, 바이올리니스트 사례가 그 대조축의 반대편임을 알 수 있다.", "claude_ex": [{"label": "The same as", "en": "My answer was <g>the same as</g> my best friend's, so we must have copied by accident.", "tr": "내 답은 가장 친한 친구의 답과 똑같았다, 그래서 우리가 실수로 베낀 게 틀림없었다.", "note": "the same as는 '차이 없음'을 명시하는 부분이므로 초록으로 표시했다."}]}, {"cat": "비교", "head": "More A than B", "rule": "A가 강조되는 쪽, B는 상대적으로 약한 쪽. 정답은 대개 A 쪽 성질과 관련된다.", "ex": "Movies do <b>more</b> to give us satisfying stories <b>than</b> to give cultural instruction.", "tr": "영화는 문화적 교훈을 주는 것보다 만족스러운 이야기를 주는 데 더 크게 기여한다.", "expl": "more A than B에서 A(만족스러운 이야기)가 실제로 더 중요하다는 저자의 주장이다. 이후 지문은 A쪽을 뒷받침하는 예시로 이어질 가능성이 크다.", "freq": true, "claude_ex": [{"label": "More A than B", "en": "He is <g>more shy than lazy</g> — he just doesn't like talking to strangers.", "tr": "그는 게으르다기보다는 수줍은 것이다 — 그는 그냥 낯선 사람과 이야기하는 걸 좋아하지 않을 뿐이다.", "note": "more A than B에서 A(수줍음)가 진짜 성질로 강조된다. A 부분을 초록으로 표시했다."}]}, {"cat": "If의 세 가지 뜻", "head": "If (조건)", "rule": "'만약 ~라면' — if의 가장 기본적인 뜻.", "ex": "<b>If</b> you study hard, you will pass the exam.", "tr": "네가 열심히 공부하면, 시험에 합격할 것이다.", "expl": "if절은 '조건', 주절은 '그 조건이 맞으면 일어나는 일'이다. 가장 흔한 뜻이라 대부분은 별 고민 없이 이렇게 읽으면 된다.", "freq": true, "claude_ex": [{"label": "If (조건)", "en": "If <g>you water this plant every day</g>, <g>it will grow quickly</g>.", "tr": "네가 이 식물에 매일 물을 주면, 그것은 빨리 자랄 것이다.", "note": "if절(조건)과 주절(결과)이 짝을 이루는 가장 기본적인 뜻이다. 조건-결과 관계를 보여주기 위해 둘 다 초록으로 표시했다."}]}, {"cat": "If의 세 가지 뜻", "head": "If (간접의문)", "rule": "'~인지 아닌지' — wonder, ask, know 같은 동사 뒤에서 목적어절을 이끈다.", "ex": "I wonder <b>if</b> he will come to the meeting.", "tr": "그가 회의에 올지 안 올지 궁금하다.", "expl": "wonder(궁금하다)처럼 '확실히 모른다'는 뜻을 가진 동사 뒤에 if가 오면, 그건 조건이 아니라 '~인지 아닌지'를 묻는 것이다. if 앞에 어떤 동사가 오는지만 보면 뜻이 바로 정해진다.", "claude_ex": [{"label": "If (간접의문)", "en": "I wonder if <g>my friend will come to the party tonight</g>.", "tr": "내 친구가 오늘 밤 파티에 올지 안 올지 궁금하다.", "note": "wonder 뒤 if절이 '~인지 아닌지' 궁금한 내용이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "If의 세 가지 뜻", "head": "If (양보)", "rule": "'~일지라도' — 뒤에 조건절 형태가 아니라 형용사·부사만 남거나, 문맥상 이미 사실로 받아들여지는 경우.", "ex": "<b>If</b> information was conveyed, it was misleading information.", "tr": "정보가 전달됐다 하더라도, 그것은 오도하는 정보였다.", "expl": "간단한 테스트: if절을 통째로 빼고 읽어도 문장의 핵심 주장이 그대로 남으면 양보, 핵심 주장 자체가 사라지면 조건이다. 여기서 if절(정보가 전달됐다)을 빼도 '그것은 오해를 부르는 정보였다'는 핵심 주장은 그대로 남는다. 그래서 이 if는 조건이 아니라 '~라 해도'로 읽는다.", "claude_ex": [{"label": "If (양보)", "en": "The movie, if <g>a bit too long</g>, was <g>still enjoyable</g>.", "tr": "그 영화는 다소 길었을지라도, 여전히 재미있었다.", "note": "if절(너무 김)을 빼도 핵심 주장(재미있음)은 그대로 남는다. 이 구조를 보여주기 위해 둘 다 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Turn to / Depend on / Rely on / Count on / Fall back on / Resort to", "rule": "전부 어원적으로 'A에 기대다/매달리다' → '의존하다'로 수렴하는 동의어군.", "ex": "We <b>rely on</b> repairmen more than we like to admit; we all <b>turn to</b> someone when things break.", "tr": "우리는 인정하고 싶은 것보다 더 많이 수리공에게 의존한다. 우리는 모두 뭔가 고장 나면 누군가에게 의지한다.", "expl": "다섯 개 동사구 전부 '기대다'라는 하나의 개념으로 바꿔 읽으면 문맥이 통일된다. 어느 것이 나와도 '의존'으로 치환해서 읽으면 된다.", "claude_ex": [{"label": "Rely on", "en": "When I have a problem, I always <g>rely on my older sister</g> for advice.", "tr": "나는 문제가 생기면 항상 조언을 얻으려고 언니에게 의지한다.", "note": "rely on 뒤가 의지하는 대상이다. 그 부분을 초록으로 표시했다 — turn to, depend on, count on도 다 같은 자리에 들어간다."}]}, {"cat": "의존·관용 동사구", "head": "Have something to do with A", "rule": "직역 '~와 함께 할 것이 있다' → 'A와 관련이 있다'.", "ex": "The problem <b>has something to do with</b> our self-understanding, not with the repairman's messiness.", "tr": "그 문제는 수리공의 지저분함이 아니라 우리의 자기 이해와 관련이 있다.", "expl": "has something to do with 뒤가 '진짜 원인·관련 대상'이다. not with 뒤와 대조되므로, 진짜 원인이 무엇인지 정확히 짚어준다.", "claude_ex": [{"label": "Have something to do with", "en": "His bad mood probably <g>has something to do with</g> failing his math test.", "tr": "그의 나쁜 기분은 아마 수학 시험에서 떨어진 것과 관련이 있을 것이다.", "note": "have something to do with 뒤가 진짜 관련된 원인이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Keep O -ing / Keep O from -ing", "rule": "Keep O -ing='O가 계속 ~하게 유지', Keep O from -ing='O가 ~로부터 분리된 상태 유지'='~하지 못하게 하다'.", "ex": "Fear <b>kept him from</b> speaking up, though he <b>kept trying</b> anyway.", "tr": "두려움이 그가 나서서 말하지 못하게 막았지만, 그는 그래도 계속 시도했다.", "expl": "from이 붙으면 '차단', 안 붙으면 '지속'이라는 정반대 의미가 된다. 전치사 하나 유무가 결정적 차이를 만든다.", "claude_ex": [{"label": "Keep O from -ing", "en": "The loud music <g>kept the baby from sleeping</g>.", "tr": "시끄러운 음악이 아기를 잠들지 못하게 막았다.", "note": "keep O from -ing 전체가 '못하게 막다'는 하나의 뜻이므로 그 부분을 초록으로 표시했다. from이 없으면 반대로 '계속 ~하게 하다'가 된다."}]}, {"cat": "의존·관용 동사구", "head": "Be bound to", "rule": "'~에 묶여있다' → '~하기 마련이다'(필연).", "ex": "Change <b>is bound to</b> happen eventually, no matter how much we resist it.", "tr": "우리가 아무리 저항해도, 변화는 결국 일어나기 마련이다.", "expl": "bound to 뒤는 피할 수 없는 필연적 사건이다. no matter how much(양보) 뒤에 나온다는 것 자체가 '어떤 조건에서도 반드시'라는 강한 필연성을 뒷받침한다.", "claude_ex": [{"label": "Be bound to", "en": "If you keep practicing every day, you are <g>bound to improve</g>.", "tr": "매일 계속 연습한다면, 너는 반드시 실력이 늘게 되어 있다.", "note": "be bound to 뒤가 필연적으로 일어날 일이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Make it", "rule": "직역 '그것을 만들다' → 문맥별로 '해내다/성공하다/도착하다/참석하다'.", "ex": "I'm afraid Bradley won't <b>make it</b> to the program on the first day.", "tr": "브래들리가 첫날 프로그램에 참석하지 못할까 봐 걱정된다.", "expl": "make it 뒤에 to+장소·행사가 오면 '도착하다/참석하다'로 읽는다. 문맥에 목적지나 일정이 있는지가 make it의 정확한 뜻을 결정한다.", "claude_ex": [{"label": "Make it", "en": "I'm worried I won't <g>make it to the bus stop on time</g>.", "tr": "나는 버스 정류장에 제시간에 도착하지 못할까 봐 걱정된다.", "note": "make it 뒤에 도착지/일정이 오면 '도착하다, 시간 맞추다'로 읽는다. 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "In short / In other words", "rule": "요약·재진술 신호 — 앞 내용을 압축하거나 쉬운 말로 다시 풀어준다.", "ex": "<b>In short</b>, the plan failed because of poor timing, not poor design.", "tr": "요컨대, 그 계획은 설계가 나빠서가 아니라 시기가 나빠서 실패했다.", "expl": "in short 뒤는 앞에서 길게 설명한 내용의 최종 요약이다. 앞부분이 복잡했어도 in short 뒤 한 문장만 잡으면 지문의 핵심 결론을 확보할 수 있다.", "claude_ex": [{"label": "In short", "en": "We missed the bus, it started raining, and my phone died. In short, <g>it was a terrible day</g>.", "tr": "우리는 버스를 놓쳤고, 비가 오기 시작했고, 휴대폰 배터리가 나갔다. 한마디로, 끔찍한 하루였다.", "note": "in short 뒤가 앞 내용 전체를 압축한 최종 요약이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "This is not the case", "rule": "'이것은 그 경우가 아니다' → 앞서 언급된 통념·가정을 부정한다.", "ex": "People assume orangutan numbers are rising; <b>this is not the case</b>.", "tr": "사람들은 오랑우탄 개체수가 늘고 있다고 생각하지만, 실제로는 그렇지 않다.", "expl": "this is not the case는 직전 문장(통념)을 정면으로 부정하는 신호다. 이 표현 뒤에는 반드시 통념을 뒤집는 진짜 사실이 이어진다.", "claude_ex": [{"label": "This is not the case", "en": "People assume tall people are always good at basketball; <g>this is not the case</g> for my cousin.", "tr": "사람들은 키 큰 사람들이 항상 농구를 잘한다고 생각하지만, 내 사촌은 그렇지 않다.", "note": "this is not the case가 직전 통념을 정면으로 부정한다. 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Get across to B", "rule": "'A를 B에게 가로질러 건너게 하다' → 'B에게 이해시키다/설득하다'.", "ex": "It's hard to <b>get</b> the idea <b>across to</b> a young audience without oversimplifying it.", "tr": "지나치게 단순화하지 않고서 그 개념을 어린 청중에게 이해시키기는 어렵다.", "expl": "get A across to B는 'A라는 정보가 B에게 무사히 건너가 이해된다'는 이미지로 기억하면 된다. 여기서는 '이해시키기 어렵다'는 것이 핵심 어려움으로 제시된다.", "claude_ex": [{"label": "Get across to", "en": "It was hard to <g>get the joke across to</g> my little brother.", "tr": "내 남동생에게 그 농담을 이해시키기는 어려웠다.", "note": "get A across to B 전체가 'A를 B에게 이해시키다'는 뜻이므로 그 구절 전체를 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Get away with", "rule": "처벌·책임을 지지 않고 모면하다 — 부정적 행동이 방치되는 상황에서 자주 쓰인다.", "ex": "We use environmental resources wastefully <b>because we can get away with it</b>: future generations do not vote.", "tr": "우리가 환경 자원을 낭비적으로 쓰는 것은 그것을 하고도 처벌받지 않기 때문이다. 미래 세대는 투표권이 없다.", "expl": "get away with it 뒤에 이어지는 이유(미래 세대는 투표권이 없음)가 '왜 처벌을 피할 수 있는지'를 설명한다. 책임 회피 구조 전체가 이 표현 하나로 요약된다.", "claude_ex": [{"label": "Get away with", "en": "He copied the answers and somehow <g>got away with it</g>.", "tr": "그는 답을 베꼈고 어찌어찌 그것을 하고도 처벌받지 않았다.", "note": "get away with it이 '나쁜 짓을 하고도 벌을 안 받다'는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "의존·관용 동사구", "head": "Lost on", "rule": "'~에게 이해되지 않다, ~에게 효과가 없다' — based on(근거하다)과 헷갈리기 쉬우니 문맥으로 구분한다.", "ex": "The fact that a colleague may be more successful <b>is lost on</b> teachers who work in isolation.", "tr": "동료가 더 성공적일 수 있다는 사실은, 고립되어 일하는 선생님들에게는 와닿지 않는다(이해되지 않는다).", "expl": "고립된 선생님들은 비교 대상 자체가 없으므로, 그 사실이 '자신에게 닿지(lost on) 않는다'. based on(그 사실에 근거한다)으로 읽으면 논리가 정반대가 되므로 반드시 문맥으로 구분해야 한다.", "claude_ex": [{"label": "Lost on", "en": "The teacher's joke about ancient history was completely <g>lost on the young students</g>.", "tr": "고대 역사에 대한 선생님의 농담은 어린 학생들에게 완전히 이해되지 않았다.", "note": "lost on 뒤가 '이해하지 못하는 사람'이다. 그 부분을 초록으로 표시했다 — based on(근거하다)과 헷갈리지 않도록 주의."}]}, {"cat": "전치사·어원", "head": "Regard A as B", "rule": "regard(보다)+as(로서) 결합 → 'A를 B로 간주하다'. 암기 대신 원뜻 결합으로 이해한다.", "ex": "They <b>regard</b> silence <b>as</b> a sign of respect, not indifference.", "tr": "그들은 침묵을 무관심이 아니라 존중의 표시로 간주한다.", "expl": "regard(보다)+as(~로서)를 그대로 이어붙이면 'A를 B로서 보다'가 되어 암기 없이 뜻이 나온다. not indifference와 대조되어 as 뒤의 respect가 핵심임을 확인할 수 있다.", "claude_ex": [{"label": "Regard A as B", "en": "Many students <g>regard the school library as</g> a quiet place to focus.", "tr": "많은 학생들은 학교 도서관을 집중할 수 있는 조용한 장소로 여긴다.", "note": "regard A as B 전체가 'A를 B로 보다'는 뜻이므로 그 구절 전체를 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "At (상태 전치사)", "rule": "좁은 지점 → 추상적 목표(look at)나 추상적 상태(at peace, at war, at a loss)로 확장된다.", "ex": "The two countries have been <b>at</b> war for a decade, yet ordinary citizens still crave to be <b>at</b> peace.", "tr": "두 나라는 10년째 전쟁 중이지만, 평범한 시민들은 여전히 평화로운 상태를 갈망한다.", "expl": "at war/at peace는 물리적 지점이 아니라 '그 상태 안에 있음'을 나타낸다. at을 '~라는 상태 속'이라는 이미지로 확장하면 다양한 숙어를 따로 안 외워도 된다.", "claude_ex": [{"label": "At (상태)", "en": "After the long argument, the two friends were finally <g>at peace</g> again.", "tr": "긴 말다툼 끝에, 그 두 친구는 마침내 다시 평화로운 상태가 되었다.", "note": "at 뒤 명사(peace)가 '어떤 상태 안에 있음'을 나타낸다. 그 부분을 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "-ceed / -cede 어원 (go)", "rule": "accede(어느쪽으로 가다=접근), succeed(아래서 올라오다=계승), recede(뒤로 가다), precede(먼저 가다), proceed(앞으로 가다) — 전부 'go' 하나로 수렴한다.", "ex": "The storm began to <b>recede</b> by nightfall, and normal life could <b>proceed</b> once again.", "tr": "폭풍은 밤이 되자 물러가기 시작했고, 일상은 다시 진행될 수 있었다.", "expl": "recede(뒤로 가다=물러가다)와 proceed(앞으로 가다=진행하다)가 같은 어원(go)에서 방향 접두사만 바뀐 것임을 알면, 두 단어를 따로 외우지 않고 접두사(re-=뒤, pro-=앞)만 기억하면 된다.", "claude_ex": [{"label": "-ceed 어원", "en": "The heavy traffic began to <g>recede</g> as it got later in the evening.", "tr": "저녁이 깊어지면서 심한 교통 체증이 물러가기 시작했다.", "note": "recede = re(뒤로)+cede(가다) = 물러가다. 어원이 담긴 동사 부분을 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "Be subject to A", "rule": "'A 아래로 던져지다'는 어원에서 파생 → 'A의 영향을 받다, A에 종속되다, A를 따를 수밖에 없다'.", "ex": "Passengers riding with the driver will also <b>be subject to</b> the same safety regulations.", "tr": "운전자와 함께 타는 승객들도 똑같은 안전 규정의 적용을 받는다.", "expl": "be subject to 뒤 명사(규정)가 '그 아래에 놓이는 대상'이다. '영향/규칙에 종속된다'는 원뜻 이미지로 읽으면 이 구문이 나올 때마다 자동으로 뜻이 잡힌다.", "claude_ex": [{"label": "Be subject to", "en": "All students are <g>subject to the same school rules</g>, no exceptions.", "tr": "모든 학생은 예외 없이 같은 교칙의 적용을 받는다.", "note": "be subject to 뒤가 '따라야 하는 규칙'이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "Account for / Take A into account", "rule": "account(계산하다)의 원뜻에서 파생. account for=계산해서 설명해내다→'설명하다, 차지하다', take into account=계산에 넣다→'고려하다'.", "ex": "The best decision requires you to <b>take</b> all available information <b>into account</b>, but this can <b>account for</b> less than half of good choices.", "tr": "최선의 결정을 내리려면 가용한 모든 정보를 고려해야 하지만, 이것이 좋은 선택의 절반도 설명하지 못할 수 있다.", "expl": "두 표현 모두 '계산'이라는 원뜻(account)에서 나왔다. into account=계산 안으로 넣음=고려, account for=계산해서 그 몫을 차지/설명함으로 구분하면 헷갈리지 않는다.", "claude_ex": [{"label": "Account for", "en": "Bad weather can partly <g>account for</g> why so few people came to the picnic.", "tr": "나쁜 날씨가 왜 소풍에 사람이 그렇게 적게 왔는지를 부분적으로 설명해줄 수 있다.", "note": "account for 뒤가 '설명되는 결과/이유'다. 그 부분을 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "To say nothing of A / Let alone", "rule": "'A는 말할 것도 없이' — A보다 더 강한 것을 이미 언급했다는 표시.", "ex": "Trees and buildings distract our attention, <b>to say nothing of</b> the glare of streetlights.", "tr": "나무와 건물이 우리의 주의를 흐트러뜨리는데, 가로등 불빛은 말할 것도 없다.", "expl": "to say nothing of 뒤는 앞에서 언급한 것보다 한 단계 더 강하거나 당연한 사례다. 별을 보기 어려운 이유를 점점 더 강한 예시로 쌓아올리는 구조다.", "rare": true, "claude_ex": [{"label": "Let alone", "en": "I don't have time to clean my room, <g>let alone the whole house</g>.", "tr": "나는 내 방을 청소할 시간도 없는데, 집 전체는 말할 것도 없다.", "note": "let alone 뒤가 앞보다 더 큰/당연한 사례다. 그 부분을 초록으로 표시했다."}]}, {"cat": "전치사·어원", "head": "To the point that", "rule": "'~할 정도까지' — 정도의 극단을 나타내는 결과절.", "ex": "Wealth abounds <b>to the point that</b> foreign travel feels like an easy investment for the mind.", "tr": "부가 넘쳐나서 외국 여행이 정신을 위한 손쉬운 투자처럼 느껴질 정도다.", "expl": "to the point that 뒤가 앞 상태(부가 넘침)의 극단적 결과다. so ~ that과 거의 같은 기능이라고 보면 된다.", "rare": true, "claude_ex": [{"label": "To the point that", "en": "She practiced piano every day <g>to the point that</g> her fingers hurt.", "tr": "그녀는 손가락이 아플 정도까지 매일 피아노를 연습했다.", "note": "to the point that 뒤가 앞 상태(연습)의 극단적 결과다. 그 부분을 초록으로 표시했다."}]}, {"cat": "문제풀이 신호", "head": "정답 = 주제의 반의어", "rule": "흐름상 어색한 문장/밑줄 어휘 문제의 정답은 대개 주제와 정반대 개념이다.", "ex": "주제: 창의성은 개인이 아니라 집단적 현상이다. → 오답: '창의성은 개인의 뇌 속에서 나온다'는 문장이 흐름상 어색한 정답이 된다.", "tr": "(문제풀이 원리이므로 별도 번역 없음)", "expl": "주제가 확실히 잡히면, 어색한 문장/오답 선지를 일일이 해석하지 않아도 '주제와 반대 방향인가?'만 확인하면 정답을 골라낼 수 있다.", "claude_ex": [{"label": "정답=반의어", "en": "Topic: <g>Sharing toys makes kids happier.</g> Wrong answer choice: kids who never share are happier.", "tr": "주제: 장난감을 나누는 게 아이들을 더 행복하게 만든다. 오답 선지: 절대 안 나누는 아이들이 더 행복하다.", "note": "주제(초록)가 확실하면 오답 선지는 그 반대 방향인지만 확인하면 된다. 주제 문장을 초록으로 표시했다."}]}, {"cat": "문제풀이 신호", "head": "오답 = 주제와 무관한 삽입", "rule": "빈칸 추론 오답 중 하나는 소재는 겹치지만 주제와 무관한 내용을 덧붙인 것이다.", "ex": "주제: 환경의 수용 능력이 제한적이면 비슷한 구성원을 피하는 게 합리적이다. → 오답: '비슷한 친구가 무조건 좋다'는 일반론만 반복하는 선지.", "tr": "(문제풀이 원리이므로 별도 번역 없음)", "expl": "소재어(비슷한 친구)가 들어있어서 그럴듯해 보이지만, 정작 주제(수용 능력의 한계)와는 무관한 내용이면 오답으로 걸러낼 수 있다.", "claude_ex": [{"label": "오답=무관 삽입", "en": "Topic: <g>Reading before bed helps you relax.</g> Wrong choice: reading before bed is always more expensive than TV.", "tr": "주제: 자기 전에 책을 읽으면 긴장이 풀린다. 오답 선지: 자기 전 독서는 TV보다 항상 돈이 더 든다.", "note": "오답은 소재(책 읽기)는 겹치지만 주제(긴장 완화)와 관련 없는 엉뚱한 내용을 붙인다. 진짜 주제 문장을 초록으로 표시했다."}]}, {"cat": "문제풀이 신호", "head": "통념 제시 후 부정 (Not / No / Myth)", "rule": "글 초반에 통념을 제시하고 이를 부정하는 문장이 나오면 그 뒤가 진짜 주제다.", "ex": "Most people believe creativity is an individual possession. <b>This is a myth.</b>", "tr": "대부분의 사람들은 창의성이 개인의 소유물이라고 믿는다. 이것은 오해다.", "expl": "'통념 제시 → myth/misconception으로 부정'은 이 강사가 강조하는 가장 흔한 글 전개 패턴이다. 부정된 직후 문장이 곧 진짜 주제문이다.", "claude_ex": [{"label": "통념 후 부정", "en": "People believe cats can't be trained. <g>This is a myth.</g>", "tr": "사람들은 고양이는 훈련될 수 없다고 믿는다. 이것은 오해다.", "note": "통념(첫 문장)을 뒤집는 부정 문장이 진짜 주제다. 부정 문장을 초록으로 표시했다."}]}, {"cat": "문제풀이 신호", "head": "질문-대답 구조 (Why? / What?)", "rule": "지문 속 질문은 언제나 소재, 그에 대한 대답이 주제다. 대답 부분이 분량상 메인 아이디어가 될 수밖에 없다.", "ex": "Why do younger investors take more risk? It is not because they are inherently risk-loving, but because they have a longer time horizon.", "tr": "왜 젊은 투자자들은 더 많은 위험을 감수하는가? 그들이 본래 위험을 좋아해서가 아니라, 더 긴 시간 지평선을 가졌기 때문이다.", "expl": "질문(왜 더 위험을 감수하는가)은 소재일 뿐이고, not because A but because B로 이어지는 대답이 진짜 주제다. 질문 자체를 정답으로 착각하면 안 된다.", "claude_ex": [{"label": "질문-대답", "en": "Why do leaves change color in fall? <g>Because trees stop making green chlorophyll.</g>", "tr": "왜 가을에 나뭇잎 색이 바뀔까? 나무가 초록색 엽록소 만들기를 멈추기 때문이다.", "note": "질문은 소재일 뿐이고, 대답이 진짜 주제다. 대답 문장을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Rather than / Instead of", "rule": "'B가 아니라 A' 또는 'B 대신 A' — 대체 관계. 실제로 일어나거나 강조되는 쪽은 A다.", "ex": "They chose collaboration <b>rather than</b> competition.", "tr": "그들은 경쟁 대신 협동을 선택했다.", "expl": "rather than/instead of 앞이 실제 선택된 쪽, 뒤가 버려진 쪽이다. not A but B와 방향만 반대일 뿐 같은 대조 기능을 한다.", "freq": true, "claude_ex": [{"label": "Rather than", "en": "She chose to walk <g>rather than take the crowded bus</g>.", "tr": "그녀는 붐비는 버스를 타는 대신 걷는 것을 선택했다.", "note": "rather than 앞(걷기)이 실제로 선택된 쪽이다. 앞을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Given that / Considering that", "rule": "뒤에 오는 사실을 전제로 앞의 결론이 나온다는 인과적 전제를 표시한다.", "ex": "<b>Given that</b> resources are limited, competition among similar individuals is inevitable.", "tr": "자원이 제한적이라는 것을 고려하면, 비슷한 개체들 간의 경쟁은 불가피하다.", "expl": "given that 뒤는 전제(자원 제한), 주절은 그 전제로부터 도출되는 결론(경쟁 불가피)이다. because와 비슷하지만 '이미 알려진 사실을 전제로 깐다'는 느낌이 강하다.", "claude_ex": [{"label": "Given that", "en": "Given that <g>it's already 11pm</g>, we should probably head home now.", "tr": "벌써 밤 11시라는 걸 고려하면, 우리는 이제 집에 가야 할 것 같다.", "note": "given that 뒤가 전제(시간)이고, 그 전제로부터 주절의 결론이 나온다. 전제를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Contrary to / As opposed to", "rule": "'~와는 반대로' — 뒤에 통념을 걸고 이어지는 문장에서 그것을 뒤집는다.", "ex": "<b>Contrary to</b> popular belief, the orangutan population has not actually increased.", "tr": "통념과는 달리, 오랑우탄 개체수는 실제로 증가하지 않았다.", "expl": "contrary to 뒤 명사(통념)는 곧 부정될 대상이다. 이 표현이 나오면 뒤에 반드시 그 통념을 뒤집는 진짜 정보가 이어진다.", "claude_ex": [{"label": "Contrary to", "en": "Contrary to what everyone expected, <g>the shy new kid won the debate contest</g>.", "tr": "모두의 예상과는 달리, 수줍은 전학생이 토론 대회에서 우승했다.", "note": "contrary to 뒤가 통념을 뒤집는 진짜 사실이다. 뒤를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "On the contrary", "rule": "앞 진술을 정면으로 부정하고 반대 내용을 제시한다.", "ex": "The results were not disappointing; <b>on the contrary</b>, they exceeded expectations.", "tr": "결과는 실망스럽지 않았다. 오히려 기대를 뛰어넘었다.", "expl": "on the contrary 앞에 이미 부정문(not disappointing)이 있어 이중으로 반대를 강조하는 구조다. 뒤는 앞의 부정을 넘어선 강한 긍정으로 이어진다.", "claude_ex": [{"label": "On the contrary", "en": "The test wasn't hard at all. On the contrary, <g>it was the easiest one all year</g>.", "tr": "그 시험은 전혀 어렵지 않았다. 오히려, 그것은 일 년 중 가장 쉬운 시험이었다.", "note": "on the contrary 뒤가 앞 부정을 넘어선 강한 긍정이다. 뒤를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Granted that / Admittedly", "rule": "상대 주장을 일단 인정한 뒤 반박으로 이어지는 양보 신호다.", "ex": "<b>Admittedly</b>, the method is slow, but it is far more accurate than any alternative.", "tr": "인정하건대 그 방법은 느리지만, 다른 어떤 대안보다 훨씬 정확하다.", "expl": "admittedly 뒤(느림)는 상대에게 양보하는 약점이고, but 뒤(정확함)가 진짜 주장이다. 양보-반박 구조에서 힘은 항상 but 뒤에 실린다.", "claude_ex": [{"label": "Admittedly", "en": "Admittedly, <g>the movie was a bit long</g>, but I still enjoyed every minute of it.", "tr": "인정하건대 그 영화는 좀 길었지만, 나는 그래도 매 순간을 즐겼다.", "note": "admittedly 뒤(단점 인정)는 양보고, but 뒤(진짜 주장)가 힘을 갖는다. 여기선 양보 부분을 초록으로 표시해 '먼저 인정하는 부분'을 보여준다."}]}, {"cat": "기타 논리 연결", "head": "That said", "rule": "앞 내용을 인정하면서도 뒤에 반전을 예고한다.", "ex": "The plan has real flaws. <b>That said</b>, it remains our best available option.", "tr": "그 계획에는 실제 결함이 있다. 그렇긴 해도, 그것은 여전히 우리가 가진 최선의 선택지다.", "expl": "that said는 admittedly와 같은 기능이지만 두 문장을 잇는 접속부사로 쓰인다. 앞의 부정적 평가가 뒤의 긍정적 결론을 막지 못한다는 걸 보여준다.", "claude_ex": [{"label": "That said", "en": "The plan has some risks. That said, <g>I think we should still try it</g>.", "tr": "그 계획에는 약간의 위험이 있다. 그렇긴 해도, 나는 그래도 우리가 시도해야 한다고 생각한다.", "note": "that said 뒤가 앞의 부정적 평가를 뒤집는 결론이다. 뒤를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Not that ~ but that", "rule": "'~해서가 아니라 ~해서다' — 원인에 대한 오해를 정정하는 구문.", "ex": "<b>Not that</b> he disliked the job, <b>but that</b> he needed more time with his family.", "tr": "그가 그 일을 싫어해서가 아니라, 가족과 더 많은 시간이 필요해서였다.", "expl": "not A but B의 변형으로, 흔히 예상되는 이유(A)를 부정하고 진짜 이유(B)를 제시한다. 오해하기 쉬운 원인을 미리 차단하는 효과가 있다.", "rare": true, "claude_ex": [{"label": "Not that ~ but that", "en": "Not that <g>he dislikes soccer</g>, but that <g>he simply doesn't have time to play</g>.", "tr": "그가 축구를 싫어해서가 아니라, 그냥 할 시간이 없어서다.", "note": "예상되는 이유(A)는 부정되고 진짜 이유(B)가 제시된다. 둘 다 초록으로 표시해 대비를 보여준다."}]}, {"cat": "기타 논리 연결", "head": "If anything", "rule": "'오히려' — 예상과 반대되거나 더 강한 방향으로 정정한다.", "ex": "The results were, <b>if anything</b>, more extreme than predicted.", "tr": "결과는 오히려 예측보다 더 극단적이었다.", "expl": "if anything은 앞의 예상(극단적이지 않을 것)을 슬쩍 뒤집어 '사실은 그 반대/그 이상'이라고 정정하는 삽입구다.", "rare": true, "claude_ex": [{"label": "If anything", "en": "The soup wasn't too salty. If anything, <g>it needed more salt</g>.", "tr": "그 국은 짜지 않았다. 오히려, 소금이 더 필요했다.", "note": "if anything 뒤가 예상을 슬쩍 뒤집는 정정이다. 뒤를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "What's more", "rule": "추가 강조 — 앞 내용에 더 강한 근거를 덧붙인다.", "ex": "The plan saves money. <b>What's more</b>, it saves time.", "tr": "그 계획은 돈을 절약한다. 게다가 시간도 절약한다.", "expl": "in addition/furthermore와 같은 계열이지만 더 구어적인 강조. 뒤에 오는 정보가 앞보다 한 단계 더 인상적인 이점으로 제시되는 경우가 많다.", "claude_ex": [{"label": "What's more", "en": "The new phone is faster. What's more, <g>it's also much cheaper</g>.", "tr": "새 휴대폰은 더 빠르다. 게다가, 훨씬 더 저렴하기도 하다.", "note": "what's more 뒤가 앞보다 한 단계 더 인상적인 추가 장점이다. 뒤를 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "It follows that", "rule": "논리적 필연 결론을 이끄는 표현 — 앞이 전제, 뒤가 결론이다.", "ex": "If all men are mortal and Socrates is a man, <b>it follows that</b> Socrates is mortal.", "tr": "모든 인간이 죽는다면, 그리고 소크라테스가 인간이라면, 소크라테스도 죽는다는 결론이 나온다.", "expl": "it follows that 앞의 두 전제가 참이면 뒤의 결론은 논리적으로 반드시 참이 된다. 삼단논법 구조를 그대로 보여주는 신호 표현이다.", "rare": true, "claude_ex": [{"label": "It follows that", "en": "All birds can fly, and penguins are birds — but wait, it doesn't actually follow that <g>penguins can fly</g>.", "tr": "모든 새는 날 수 있고 펭귄은 새다 — 하지만 잠깐, 펭귄이 날 수 있다는 결론이 실제로 따라오는 건 아니다.", "note": "it follows that 뒤가 전제로부터 논리적으로 도출되는(또는 안 되는) 결론이다. 그 결론 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Precisely because", "rule": "'because'를 강조 — 원인을 정확히 지목하며, 흔히 역설적 결과와 짝을 이룬다.", "ex": "<b>Precisely because</b> it was forbidden, the book became a bestseller.", "tr": "금지되었기 때문에 정확히 그 이유로, 그 책은 베스트셀러가 되었다.", "expl": "precisely because는 '다른 이유가 아니라 바로 이 이유 때문에'라는 강한 인과 지목이다. 뒤에 역설적 결과(금지→오히려 인기)가 따라오는 패턴이 흔하다.", "rare": true, "claude_ex": [{"label": "Precisely because", "en": "The cake sold out fast <g>precisely because it was only available for one day</g>.", "tr": "그 케이크는 오직 하루만 판매됐기 때문에 정확히 그 이유로 빨리 다 팔렸다.", "note": "precisely because 뒤가 정확히 지목된 원인이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Ironically / Paradoxically", "rule": "예상과 반대되는 결과 — 이 표현이 나오면 그 문장이 핵심 내용일 확률이 높다.", "ex": "<b>Ironically</b>, safety measures sometimes encourage riskier driving.", "tr": "역설적이게도, 안전 조치가 때로는 더 위험한 운전을 조장한다.", "expl": "ironically 뒤는 상식(안전조치=안전)을 뒤집는 반전 정보다. 이 강사가 강조하는 '오답=주제 반의어' 원리와 정확히 반대로, 이 문장 자체가 지문의 반전 주제일 가능성이 크다.", "claude_ex": [{"label": "Ironically", "en": "Ironically, <g>the fire station itself once caught on fire</g>.", "tr": "역설적이게도, 소방서 그 자체가 한 번 불이 난 적이 있었다.", "note": "ironically 뒤가 상식을 뒤집는 반전 정보다. 그 부분을 초록으로 표시했다 — 이 문장 자체가 핵심 내용일 확률이 높다."}]}, {"cat": "기타 논리 연결", "head": "Take A for granted", "rule": "'A를 승인된 것으로 받아들이다' → '당연시 여기다'.", "ex": "We <b>take</b> clean water <b>for granted</b> until the day it's gone.", "tr": "우리는 깨끗한 물이 사라지는 날까지 그것을 당연하게 여긴다.", "expl": "for granted 뒤에 숨은 의미는 '이미 승인된 것처럼 취급해서 신경 안 씀'이다. until 이하가 그 당연함이 깨지는 순간을 보여주며 경고성 메시지를 완성한다.", "freq": true, "claude_ex": [{"label": "Take for granted", "en": "We often <g>take our health for granted</g> until we get sick.", "tr": "우리는 아플 때까지 흔히 건강을 당연하게 여긴다.", "note": "take A for granted 전체가 'A를 당연시하다'는 뜻이므로 그 구절을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Beyond me", "rule": "'나를 넘어서' → '내가 이해할 수 없는'.", "ex": "How the engine actually works is completely <b>beyond me</b>.", "tr": "그 엔진이 실제로 어떻게 작동하는지는 나로서는 도저히 이해할 수 없다.", "expl": "beyond(넘어서)라는 원뜻을 '내 이해력의 한계를 넘어선다'는 이미지로 연결하면 암기 없이 뜻이 나온다.", "claude_ex": [{"label": "Beyond me", "en": "How my computer suddenly fixed itself is completely <g>beyond me</g>.", "tr": "내 컴퓨터가 갑자기 왜 저절로 고쳐졌는지는 나로서는 도저히 이해할 수 없다.", "note": "beyond me가 '내 이해력을 넘어선다'는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "A long way off", "rule": "'긴 길만큼 멀다' → '아직 멀었다, 갈 길이 멀다'.", "ex": "A complete scientific explanation of human morality <b>is</b> still <b>a long way off</b>.", "tr": "인간 도덕성에 대한 완전한 과학적 설명은 아직도 갈 길이 멀다.", "expl": "물리적 거리(길)를 시간·성취의 거리로 은유한 표현이다. '아직 답이 없다, 미완성이다'는 겸손한 결론을 내릴 때 자주 쓰인다.", "claude_ex": [{"label": "A long way off", "en": "Becoming a great chef takes years of practice — for me, that goal is <g>still a long way off</g>.", "tr": "훌륭한 요리사가 되려면 수년의 연습이 필요하다 — 나에게 그 목표는 아직 갈 길이 멀다.", "note": "a long way off가 '아직 멀었다'는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Has taken on a life of its own", "rule": "'그 자체만의 생명을 띠다' → '독자적인 중요성·가치를 갖게 되다'.", "ex": "The rumor <b>took on a life of its own</b> once it hit social media.", "tr": "그 소문은 소셜미디어에 퍼지자 그 자체로 독립적인 생명력을 갖게 되었다.", "expl": "원래의 통제 주체(소문을 처음 낸 사람)를 벗어나 스스로 커진다는 이미지다. 정부, 상품, 소문 등 원래는 도구였던 것이 그 자체로 목적/가치가 되는 상황에 자주 쓰인다.", "claude_ex": [{"label": "Has taken on a life of its own", "en": "The small joke between us spread so much that it <g>has taken on a life of its own</g> at school.", "tr": "우리끼리 하던 작은 농담이 너무 퍼져서 학교에서 그 자체로 독립적인 생명력을 갖게 되었다.", "note": "has taken on a life of its own이 '원래 만든 사람을 벗어나 스스로 커졌다'는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Demanding / Taxing", "rule": "세금(tax)·요구(demand)의 원뜻에서 파생 — 둘 다 '힘든, 고된, 부담스러운'으로 수렴한다.", "ex": "Caring for a newborn is physically and emotionally <b>demanding</b>, no less <b>taxing</b> than a full-time job.", "tr": "신생아를 돌보는 것은 육체적으로나 정신적으로 힘들며, 정규직 못지않게 부담스럽다.", "expl": "taxing은 '세금을 내는 것처럼 부담스럽다'는 이미지, demanding은 '계속 요구받는다'는 이미지다. 둘 다 결국 '힘들다'는 하나의 뜻으로 수렴하므로 서로 바꿔 읽어도 된다.", "claude_ex": [{"label": "Demanding", "en": "Taking care of three younger siblings all summer was <g>really demanding</g>.", "tr": "여름 내내 세 명의 어린 동생들을 돌보는 것은 정말 힘들었다.", "note": "demanding이 '많은 시간과 노력을 요구해서 힘들다'는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Bear (다의어)", "rule": "원뜻은 '지니다'. 문맥에 따라 참다/견디다/지탱하다/(열매를) 맺다/(인상을) 갖다로 파생된다.", "ex": "I can't <b>bear</b> it any longer. This finding has little <b>bearing</b> on our daily lives.", "tr": "나는 더 이상 그것을 견딜 수 없다. 이 발견은 우리 일상생활과 거의 관련이 없다.", "expl": "'지니다'라는 원뜻 하나로 모든 파생 의미를 꿴다: 고통을 지니면 '참다', 무게를 지니면 '지탱하다', 관련성을 지니면 '~와 관계있다(bearing on)'가 된다.", "claude_ex": [{"label": "Bear", "en": "I couldn't <g>bear the pain</g> any longer after I twisted my ankle.", "tr": "발목을 삔 후, 나는 더 이상 그 고통을 참을 수 없었다.", "note": "bear가 여기선 '참다'로 쓰였다. 그 동사 부분을 초록으로 표시했다 — '지니다'라는 원뜻에서 참다, 지탱하다 등으로 다 파생된다."}]}, {"cat": "기타 논리 연결", "head": "Vocation (어원)", "rule": "'calling(부르심)'에서 유래 — 중세에 직업을 신의 부르심으로 여긴 데서 비롯되었다. '천직, 소명으로서의 직업'이라는 뉘앙스를 담는다.", "ex": "A technical <b>vocation</b> is rewarding precisely because it is not designed to fix you into one job.", "tr": "기술 관련 천직은 정확히 그것이 한 가지 직업에만 고정되도록 설계되지 않았기 때문에 보람이 있다.", "expl": "vocation을 단순히 '직업'으로만 읽으면 뉘앙스를 놓친다. '부름 받은 일'이라는 어원을 알면 이 단어가 왜 rewarding(보람 있는)과 자연스럽게 어울리는지 이해된다.", "claude_ex": [{"label": "Vocation", "en": "For her, teaching isn't just a job — it feels like her true <g>vocation</g>.", "tr": "그녀에게 가르치는 일은 단순한 직업이 아니라, 진짜 천직처럼 느껴진다.", "note": "vocation이 '단순 직업'을 넘어 '소명, 천직'으로 쓰인 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Modest (문맥별 이중 의미)", "rule": "사람에게 쓰면 '겸손한', 사물·수치에 쓰면 '보통의, 크지 않은, 수수한'이라는 뜻이 된다.", "ex": "Each culture has its own <b>modest</b> understanding of what counts as a <b>modest</b> request.", "tr": "각 문화마다 무엇이 소박한 요청으로 간주되는지에 대한 나름의 겸허한 이해를 갖고 있다.", "expl": "같은 단어라도 주어가 사람(이해)이면 '겸손한', 대상이 요청·규모면 '소박한/과하지 않은'으로 갈라진다. 수식받는 명사의 성격을 보고 판단해야 한다.", "claude_ex": [{"label": "Modest", "en": "Even after winning first place, she stayed <g>modest</g> and never bragged about it.", "tr": "1등을 하고 나서도, 그녀는 겸손했고 그것에 대해 절대 자랑하지 않았다.", "note": "modest가 사람에게 쓰이면 '겸손한'이라는 뜻이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Optimize / Optimal", "rule": "'최적화하다/최적의' — 여러 요소 중 가장 나은 균형점을 찾는다는 뜻으로, 경제·생태·전략 지문에서 반복적으로 쓰인다.", "ex": "Fish populations evolve toward an <b>optimal</b> reproductive strategy under fishing pressure.", "tr": "물고기 개체군은 어획 압력 하에서 최적의 번식 전략을 향해 진화한다.", "expl": "optimal은 '최고'가 아니라 '주어진 제약 안에서 가장 나은'이라는 뜻이다. 지문에 제약 조건(어획 압력)이 먼저 나오고 그 뒤에 optimal이 나오면, 그 제약을 고려한 균형점을 찾고 있다는 신호다.", "claude_ex": [{"label": "Optimal", "en": "Given the small kitchen, the family found the <g>optimal</g> way to arrange the furniture.", "tr": "작은 부엌을 고려했을 때, 그 가족은 가구를 배치하는 최적의 방법을 찾았다.", "note": "optimal이 '주어진 제약 안에서 가장 나은'이라는 뜻이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Carrying capacity", "rule": "'수용 능력' — 한 환경이 감당할 수 있는 자원·개체 수의 한계를 가리키는 생태·경제 용어.", "ex": "The <b>carrying capacity</b> of a given environment imposes a limit on how many similar individuals it can support.", "tr": "주어진 환경의 수용 능력은 그 환경이 지원할 수 있는 비슷한 개체의 수에 제한을 가한다.", "expl": "carrying capacity는 '환경이 짊어질(carry) 수 있는 용량(capacity)'이라는 원뜻 그대로 읽으면 된다. 이 개념이 나오면 뒤에는 항상 '한계·제약'이 이어진다.", "claude_ex": [{"label": "Carrying capacity", "en": "The small pond couldn't support more fish — it had already reached its <g>carrying capacity</g>.", "tr": "작은 연못은 더 이상의 물고기를 지탱할 수 없었다 — 이미 수용 능력의 한계에 도달했다.", "note": "carrying capacity가 '환경이 감당할 수 있는 최대치'라는 뜻이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "지시어·접속어", "head": "Therefore / Thus (결론 도출)", "rule": "앞의 근거로부터 논리적 결론을 이끌어낸다. therefore 뒤 문장이 지문의 최종 주장인 경우가 많다.", "ex": "Painters could no longer compete with photography in depicting reality. <b>Therefore</b>, painters focused more on abstraction.", "tr": "화가들은 더 이상 사실을 묘사하는 데 있어 사진과 경쟁할 수 없었다. 따라서 화가들은 추상화에 더 집중했다.", "expl": "therefore 앞은 원인(사진과의 경쟁에서 밀림), 뒤는 그로 인한 화가들의 선택(추상화)이다. therefore가 나오면 앞뒤를 원인-결과로 묶어서 통째로 이해하면 된다.", "freq": true, "claude_ex": [{"label": "Therefore", "en": "She practiced every single day. Therefore, <g>she became the fastest runner on the team</g>.", "tr": "그녀는 매일매일 연습했다. 따라서, 그녀는 팀에서 가장 빠른 주자가 되었다.", "note": "therefore 뒤가 앞 근거로부터 나온 결론이다. 뒤를 초록으로 표시했다."}]}, {"cat": "비교", "head": "Not as ~ as (열등비교)", "rule": "'B만큼 A하지 않다' — 두 대상 중 하나가 상대적으로 부족함을 나타낸다.", "ex": "A map is <b>not as</b> accurate <b>as</b> the real terrain it represents; it is an inexact copy at best.", "tr": "지도는 그것이 나타내는 실제 지형만큼 정확하지 않다. 기껏해야 부정확한 복사본일 뿐이다.", "expl": "not as accurate as 뒤에 이어지는 'inexact copy'가 앞 문장의 부족한 정도를 구체적으로 설명해준다. 열등비교 뒤에는 그 부족함의 이유나 대안적 표현이 따라오는 경우가 많다.", "claude_ex": [{"label": "Not as ~ as", "en": "This new phone is <g>not as durable as</g> my old one — it already has a scratch.", "tr": "이 새 휴대폰은 내 예전 것만큼 튼튼하지 않다 — 벌써 흠집이 났다.", "note": "not as~as가 두 대상의 비교에서 부족한 쪽을 나타낸다. 그 부분을 초록으로 표시했다."}]}, {"cat": "양보", "head": "No matter how/what/who (양보)", "rule": "'아무리 ~해도' — 어떤 조건을 대입해도 결론이 바뀌지 않는다는 강한 양보.", "ex": "Change is bound to happen eventually, <b>no matter how</b> much we resist it.", "tr": "우리가 아무리 저항해도, 변화는 결국 일어나기 마련이다.", "expl": "no matter how 뒤는 극단적인 반대 조건(많이 저항함)이고, 주절은 그 조건에도 흔들리지 않는 결론(변화는 일어남)이다. 조건을 아무리 세게 걸어도 결론이 안 바뀐다는 뜻이므로 결론의 확실성이 매우 강하다.", "claude_ex": [{"label": "No matter how", "en": "No matter how <g>tired I am</g>, <g>I always walk my dog before bed</g>.", "tr": "내가 아무리 피곤해도, 나는 항상 자기 전에 개를 산책시킨다.", "note": "no matter how 뒤(조건)를 아무리 세게 걸어도 주절(결론)은 안 바뀐다. 둘 다 초록으로 표시해 그 확실함을 보여준다."}]}, {"cat": "강조구문", "head": "The fact that (동격 that)", "rule": "the fact 뒤 that절이 그 사실의 구체적 내용이다. fact가 추상적이어도 that절을 읽으면 실체가 드러난다.", "ex": "<b>The fact that</b> a colleague may be more successful rarely occurs to teachers who work alone.", "tr": "동료가 더 성공적일 수 있다는 사실은, 혼자 일하는 선생님들에게는 좀처럼 떠오르지 않는다.", "expl": "the fact와 that절은 동격이므로 '사실 = that절 내용'으로 치환해서 읽으면 된다. that절을 읽지 않으면 무슨 사실인지 알 수 없으므로 반드시 끝까지 읽어야 하는 구조다.", "claude_ex": [{"label": "The fact that", "en": "<g>The fact that she apologized first</g> showed how mature she really was.", "tr": "그녀가 먼저 사과했다는 사실은 그녀가 실제로 얼마나 성숙한지 보여줬다.", "note": "the fact와 that절은 동격이다. that절(먼저 사과함)이 그 '사실'의 실제 내용이므로 초록으로 표시했다."}]}, {"cat": "기타 논리 연결", "head": "Compare notes", "rule": "직역하면 '노트를 비교하다'지만, 실제로는 '각자의 생각·의견을 서로 나누고 교환하다'라는 뜻이다.", "ex": "Teachers who meet regularly to <b>compare notes</b> and plan shared assessments rarely feel isolated.", "tr": "정기적으로 만나 의견을 나누고 공동 평가를 계획하는 선생님들은 좀처럼 고립감을 느끼지 않는다.", "expl": "compare notes를 문자 그대로 '메모를 비교하다'로 읽으면 문맥이 이상해진다. '각자의 생각을 담은 노트를 맞대본다'는 이미지로 '의견 교환'까지 확장해서 이해해야 한다.", "claude_ex": [{"label": "Compare notes", "en": "After the trip, the two friends met up to <g>compare notes</g> about which countries they liked best.", "tr": "여행 후, 두 친구는 어느 나라가 가장 좋았는지 서로 의견을 나누기 위해 만났다.", "note": "compare notes가 '메모를 비교하다'가 아니라 '서로 생각을 나누다'라는 뜻이다. 그 구절을 초록으로 표시했다."}]}], adv: [{"cat": "심화 핵심 원리", "head": "도치 (Inversion)", "rule": "강조하고 싶은 요소를 문장 맨 앞으로 끌어오면서 어순이 뒤바뀌는 것. 왜 이 순서로 썼는지 물으면 '뭘 강조하려고 앞으로 뺐는지'가 답이다.", "ex": "I seem to have been gathering a few shells on the shore <b>all my life</b>. → <b>All my life</b>, I seem to have been gathering a few shells on the shore.", "tr": "나는 평생 동안 해변가에서 조개껍데기 몇 개를 주워온 것 같다.", "expl": "원래 문장 끝에 있던 'all my life(내 평생)'를 맨 앞으로 뺀 것은 그것이 이 문장에서 가장 강조하고 싶은 부분이기 때문이다. 도치를 만나면 '왜 이걸 앞으로 뺐지?'를 먼저 묻고, 그 답이 곧 그 문장의 핵심이다.", "claude_ex": [{"label": "도치", "en": "Never before <g>had she felt so proud of herself</g>.", "tr": "이전에는 그녀가 이렇게 스스로 자랑스러웠던 적이 없었다.", "note": "'Never before'를 강조하려고 앞으로 뺐고, 그 결과 주어-동사 순서가 뒤집혔다(had she felt). 강조하고 싶어서 앞으로 나온 부분과 뒤집힌 주절을 함께 초록으로 표시했다."}]}, {"cat": "심화 핵심 원리", "head": "치환 / 패러프레이징 (Paraphrasing)", "rule": "같은 개념을 절대 같은 단어로 반복하지 않고 계속 다른 표현으로 바꿔 쓰는 것. 영어 학술문의 가장 전형적인 특징 — 기본 탭의 '반복 표현'과 같은 원리이며, 심화에서는 이 치환의 폭이 훨씬 크고 비유적이다.", "ex": "ocean of truth, the sea of literature, boundless immensity — 이 세 표현은 전부 '인간이 도달할 수 없는 광대한 진리/지식의 총량'이라는 하나의 개념을 가리킨다.", "tr": "진실의 바다, 문학의 바다, 끝없는 광대함.", "expl": "세 표현의 사전적 의미는 다르지만(바다, 문학, 광대함) 이 지문 안에서는 전부 같은 하나의 대상을 비유적으로 가리킨다. 심화 지문은 이런 식으로 같은 개념을 여러 겹의 비유로 감싸서 표현하므로, '이게 결국 같은 얘기인가?'를 계속 확인하며 읽어야 한다.", "claude_ex": [{"label": "치환/패러프레이징", "en": "<g>Working together</g> as a team helped them win. This <g>spirit of cooperation</g> carried them through the whole season.", "tr": "팀으로 함께 일한 것이 그들이 이기는 데 도움이 됐다. 이 협동 정신이 그들을 시즌 내내 이끌었다.", "note": "'working together'와 'spirit of cooperation'은 다른 단어지만 같은 개념(협동)을 가리킨다. 두 표현 다 초록으로 표시했다 — 같은 얘기를 다른 말로 바꿔 쓰는 게 패러프레이징이다."}]}, {"cat": "심화 핵심 원리", "head": "생략 (Ellipsis)", "rule": "원어민에게는 너무 뻔해서 굳이 안 쓰는 부분을 통째로 생략하는 것. 문맥으로 생략된 부분을 복원해서 읽어야 한다.", "ex": "How much more must the sea of literature be a pathless immensity to each of us <b>than</b> [it was] <b>to the great Newton</b>?", "tr": "위대한 뉴턴에게 그러했던 것보다, 문학의 바다는 우리 각자에게 얼마나 더 헤아릴 수 없이 광대해야만 하겠는가?", "expl": "than 뒤에 원래 있어야 할 'it was'가 생략됐다. 비교 대상(뉴턴에게는 그러했다)이 앞 내용과 뻔히 겹치기 때문에 통째로 잘라낸 것이다. 생략된 자리에 무엇이 들어갈지는 항상 앞 문장 구조를 그대로 복사해서 채워보면 된다.", "claude_ex": [{"label": "생략", "en": "She can run faster than <g>[she can run]</g> her brother can.", "tr": "그녀는 남동생이 뛸 수 있는 것보다 더 빨리 뛸 수 있다.", "note": "than 뒤에서 앞과 겹치는 부분('run')이 생략됐다. 생략된 자리와 그걸 채워야 할 의미를 초록으로 표시했다 — 앞 구조를 그대로 복사해서 빈자리를 채우면 된다."}]}, {"cat": "심화 전용 구문", "head": "The more A, the more B (비례구문)", "rule": "'A할수록 더 B하다' — 두 성질이 같은 방향으로 함께 커지거나 작아진다는 비례 관계.", "ex": "<b>The more</b> carefully nature has been studied, <b>the more</b> widely has order been found to prevail.", "tr": "자연을 더 세심하게 연구할수록, 질서가 더 널리 존재한다는 것이 발견되어 왔다.", "expl": "앞 the more(연구를 자세히 할수록)와 뒤 the more(질서를 더 많이 발견함)가 같은 방향으로 함께 움직인다. 두 the more 뒤에 오는 내용이 원인-결과처럼 짝을 이루므로, 하나만 이해돼도 나머지 방향을 같은 쪽으로 맞추면 된다.", "claude_ex": [{"label": "The more, the more", "en": "<g>The more you practice</g>, <g>the more confident you become</g>.", "tr": "연습을 더 많이 할수록, 너는 더 자신감이 생긴다.", "note": "앞 the more(연습)와 뒤 the more(자신감)가 같은 방향으로 함께 커진다. 둘 다 초록으로 표시해 비례 관계를 보여준다."}]}, {"cat": "심화 전용 구문", "head": "Whether A or B (or otherwise)", "rule": "'A든 B든 (또는 그 무엇이든) 상관없이' — 조건을 따지지 않고 결론이 똑같다는 것을 강조.", "ex": "Persistent labor is necessary for every step of advance, <b>whether</b> the motive is purely the pursuit of knowledge <b>or</b> profitable advantage.", "tr": "동기가 순수한 지식 추구든 이윤 추구든 상관없이, 발전의 매 단계마다 끈질긴 노력이 필요하다.", "expl": "whether A or B는 'A일 때도, B일 때도 결론은 똑같다'는 뜻이다. 뒤에 이어지는 주절(끈질긴 노력이 필요하다)이 동기와 무관하게 항상 성립하는 진짜 주장이다.", "claude_ex": [{"label": "Whether A or B", "en": "<g>You have to finish your homework</g>, whether you like it or not.", "tr": "네가 좋든 싫든, 너는 숙제를 끝내야 한다.", "note": "whether A or B 뒤 조건과 상관없이 앞 주절(숙제를 끝내야 함)은 항상 성립한다. 그 변하지 않는 주절을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "In itself", "rule": "'그 자체로, 본질적으로' — 다른 것과의 관계·용도와 상관없이 그 대상 하나만 놓고 본 성질을 말한다.", "ex": "For Kant, respect for autonomy entails the duty to treat humanity as an end <b>in itself</b>.", "tr": "칸트에게 있어 자율성에 대한 존중은 인간성을 그 자체로 목적으로 대해야 하는 의무를 포함한다.", "expl": "'수단이 아니라 목적 그 자체'라는 칸트 윤리학의 핵심을 담은 표현이다. in itself는 '다른 무언가를 위해서가 아니라, 그 자체만으로 가치 있다'는 뜻으로, 수단-목적 대조 구도에서 자주 쓰인다.", "claude_ex": [{"label": "In itself", "en": "Winning isn't everything — sometimes trying your best is a success <g>in itself</g>.", "tr": "이기는 게 전부는 아니다 — 때로는 최선을 다하는 것 자체가 성공이다.", "note": "in itself가 '다른 것과 상관없이 그 자체로'라는 뜻이므로 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "No less than", "rule": "'~에 못지않게' — 두 대상의 중요성·정도가 동등하다는 것을 강조하는 비교 표현.", "ex": "Ethics, <b>no less than</b> physics, is concerned with actually existent situations and demonstrable effects.", "tr": "윤리학은 물리학에 못지않게, 실제로 존재하는 상황과 입증 가능한 효과들을 다룬다.", "expl": "물리학(과학)과 윤리학을 동등한 수준으로 놓는 표현이다. '윤리학은 물리학보다 못하다'는 통념을 반박하며 '똑같이 중요하다'고 주장하는 문맥에서 자주 쓰인다.", "claude_ex": [{"label": "No less than", "en": "Art class is, <g>no less than math class</g>, an important part of school.", "tr": "미술 수업은 수학 수업 못지않게, 학교의 중요한 부분이다.", "note": "no less than이 두 대상을 동등한 수준으로 놓는다. 비교 대상 전체를 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "To the extent that / So far as / In so far as", "rule": "'~하는 한, ~하는 정도까지' — 세 표현이 사실상 동의어군이며, 조건이 성립하는 범위·정도를 한정한다.", "ex": "A work is original <b>to the extent that</b> it originates in its creator.", "tr": "작품은 그것이 창작자로부터 비롯되는 정도까지만 독창적이다.", "expl": "이 작품의 '독창성'은 무한하지 않고 '창작자에게서 나온 만큼만' 인정된다는 한정 조건이다. to the extent that/so far as/in so far as는 모두 '그 조건이 미치는 범위 안에서만'이라는 뜻으로 바꿔 읽으면 된다.", "claude_ex": [{"label": "To the extent that", "en": "I'll help you <g>to the extent that</g> I don't get in trouble myself.", "tr": "나 자신이 곤란해지지 않는 한도까지는 너를 도와줄게.", "note": "to the extent that 뒤가 도움의 한계를 정하는 조건이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "By no means / Far from", "rule": "'결코 ~이 아닌' / '~이기는커녕 오히려' — 강한 부정 뒤에 정반대의 진실을 제시할 때 함께 쓰이는 경우가 많다.", "ex": "The environment appears to be a static entity. This, however, is <b>by no means</b> the case. <b>Far from</b> being static, the environment is constantly changing.", "tr": "환경은 정적인 존재처럼 보인다. 하지만 이것은 결코 사실이 아니다. 정적이기는커녕, 환경은 끊임없이 변화하고 있다.", "expl": "by no means로 앞의 통념(정적이다)을 강하게 부정한 뒤, far from으로 그 정반대의 진실(끊임없이 변화한다)을 제시하는 전형적인 통념-반박 구조다. [2020년 9월 모평 실제 지문]", "claude_ex": [{"label": "By no means / Far from", "en": "The test was <g>by no means easy</g> — in fact, it was <g>far from simple</g>.", "tr": "그 시험은 결코 쉽지 않았다 — 사실, 결코 간단하지 않았다.", "note": "by no means와 far from 둘 다 강한 부정을 나타낸다. 부정되는 형용사(easy, simple)를 포함해 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Otherwise", "rule": "'그렇지 않으면' 또는 '혹은 다르게' — 앞에서 제시한 것과 다른 대안이나 가능성을 짧게 덧붙인다.", "ex": "Students of ethics have been perplexed whether to classify their subject as a science, an art, or <b>otherwise</b>.", "tr": "윤리학자들은 자신들의 학문을 과학으로 분류해야 할지, 예술로 분류해야 할지, 아니면 다른 무언가로 분류해야 할지 혼란스러워했다.", "expl": "or otherwise는 앞서 나열한 선택지(science, art) 외에 '또는 그 밖의 무언가'까지 열어두는 표현이다. 목록을 다 나열하지 않고 짧게 여지를 남길 때 쓴다.", "claude_ex": [{"label": "Otherwise", "en": "You should study now, <g>otherwise you'll regret it later</g>.", "tr": "너는 지금 공부해야 한다, 그렇지 않으면 나중에 후회할 것이다.", "note": "otherwise 뒤가 '그렇게 하지 않았을 때 생기는 일'이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Not ~ without ~ing / It never rains but it pours", "rule": "이중부정 강조 구문. '~하지 않고서는 ~하지 않는다' = '~할 때마다 반드시 ~한다'는 강한 긍정. 한 문장에 부정어가 두 개 있으면 둘 다 지우고 강한 긍정으로 읽는다.", "ex": "<b>It never rains but it pours.</b> (비가 왔다 하면 반드시 쏟아진다 → 엎친 데 덮친 격)", "tr": "안 좋은 일은 한꺼번에 몰려온다(불행은 겹쳐서 온다).", "expl": "never와 but(=without)이 겹친 이중부정이다. '비가 안 오면서 쏟아지지 않는 경우는 없다' → 두 부정을 지우면 '비가 왔다 하면 무조건 쏟아진다'는 강한 긍정이 된다. 이 자체가 '안 좋은 일은 겹쳐서 온다'는 속담으로 굳어졌다.", "rare": true, "claude_ex": [{"label": "Not ~ without ~ing", "en": "My dog <g>never barks without a reason</g> — something always makes him do it.", "tr": "내 개는 이유 없이는 절대 짖지 않는다 — 항상 뭔가가 개를 그렇게 만든다.", "note": "never와 without이 겹친 이중부정으로, '짖을 때는 항상 이유가 있다'는 강한 긍정이 된다. 그 이중부정 구절을 초록으로 표시했다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "AND / OR (등위접속사 병렬구조) [기본 표제어]", "rule": "기본 탭과 같은 원리: and·or로 연결된 항목은 문맥상 의미가 비슷하다. 심화 지문에서는 병렬 항목 하나하나가 훨씬 길고 추상적이라 놓치기 쉽다.", "ex": "The names of pitches <b>are associated with</b> specific frequency values, <b>and</b> our current system is called A440.", "tr": "음의 이름들은 특정 주파수 값과 관련되어 있으며, 우리의 현재 체계는 A440이라고 불린다.", "expl": "and로 연결된 두 절 모두 '음이름=주파수'라는 같은 주제를 다룬다. 뒤 절(A440)이 어려워도, 앞 절(음이름과 주파수가 관련됨)과 같은 방향의 구체화라는 것만 알면 충분하다.", "shared": true, "claude_ex": [{"label": "AND (심화 적용)", "en": "<g>The hikers packed extra water</g>, and <g>they also brought a map just in case</g>.", "tr": "등산객들은 물을 추가로 챙겼고, 만약을 대비해 지도도 가져갔다.", "note": "and로 이어진 두 준비 행동이 같은 방향(대비)이다. 둘 다 초록으로 표시했다 — 심화 지문에서도 이 원리는 똑같이 적용된다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "However / But [기본 표제어]", "rule": "기본 탭과 같은 원리: 앞뒤가 정반대. 심화 지문에서는 반전 앞뒤의 문장이 훨씬 길고 추상적 개념으로 대치되는 경우가 많다.", "ex": "This appears to be a valid distinction. <b>However</b>, mature reflection reveals that it is superficial and not wholly true.", "tr": "이것은 타당한 구분처럼 보인다. 하지만 성숙한 숙고는 이것이 피상적이며 완전히 옳지는 않다는 것을 보여준다.", "expl": "however 앞(타당해 보임)과 뒤(사실은 피상적임)가 정반대다. 심화 지문은 이렇게 '타당해 보이지만 실은 아니다'라는 2단계 반전이 자주 나오므로, however가 나오면 반드시 앞의 통념을 의심하는 태도로 읽어야 한다.", "shared": true, "claude_ex": [{"label": "However (심화 적용)", "en": "<g>The plan looked perfect on paper</g>. However, <g>it fell apart the moment they tried it</g>.", "tr": "그 계획은 서류상으로는 완벽해 보였다. 하지만, 그들이 시도하는 순간 무너졌다.", "note": "however 앞뒤가 정반대다. 둘 다 초록으로 표시했다 — 심화 지문에서는 이 반전이 통념을 뒤집는 형태로 자주 쓰인다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "Not A but B [기본 표제어]", "rule": "기본 탭과 같은 원리: 'A가 아니라 B'. 심화 지문에서는 A와 B 자리에 추상 명사구가 통째로 들어가 알아보기 어렵다.", "ex": "What seemed disorder has proved to be <b>nothing but</b> complexity — <b>not</b> an absence of order <b>but</b> a deeper kind of it.", "tr": "무질서처럼 보였던 것은 그저 복잡성이었을 뿐임이 드러났다 — 질서가 없는 것이 아니라 더 깊은 형태의 질서였다.", "expl": "not(질서가 없음)과 but(더 깊은 질서) 구도가 그대로다. 다만 심화 지문에서는 이 대조가 문장 하나로 안 끝나고 앞뒤 여러 문장에 걸쳐 풀어서 서술되므로, 대조의 축(질서 없음 vs 질서 있음)만 붙잡고 계속 따라가야 한다.", "shared": true, "claude_ex": [{"label": "Not A but B (심화 적용)", "en": "The delay was caused <g>not by the weather</g> but <g>by a simple scheduling mistake</g>.", "tr": "그 지연은 날씨 때문이 아니라 단순한 일정 착오 때문에 생긴 것이었다.", "note": "not A but B에서 A(날씨)는 부정되고 B(일정 착오)가 진짜 원인이다. 둘 다 초록으로 표시해 대비를 보여준다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "This / That (지시어) [기본 표제어]", "rule": "기본 탭과 같은 원리: 반드시 앞 문장의 특정 대상을 가리킨다. 심화 지문에서는 지시 대상이 문장 하나가 아니라 앞 문단 전체의 논지를 가리키기도 한다.", "ex": "<b>This</b>, however, is by no means the case.", "tr": "하지만 이것은 결코 사실이 아니다.", "expl": "this가 가리키는 것은 바로 앞 문장 전체('환경은 정적인 존재로 보인다'는 통념)다. 심화 지문에서 this/that이 나오면 반드시 몇 문장을 거슬러 올라가 '무엇을 가리키는지'부터 확정하고 읽어야 한다.", "shared": true, "claude_ex": [{"label": "This/That (심화 적용)", "en": "<g>The bridge had been closed for repairs for months</g>. This meant the whole town had to take a longer route to work.", "tr": "그 다리는 몇 달 동안 수리로 폐쇄되어 있었다. 이것은 마을 전체가 출근길에 더 먼 길로 돌아가야 했다는 뜻이었다.", "note": "this가 가리키는 대상(다리 폐쇄)이 앞 문장에 있다. 그 대상을 초록으로 표시했다 — 심화 지문에서는 this가 문단 전체를 가리키기도 하니 항상 앞을 확인해야 한다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "So + 형용사/부사 + that [기본 표제어]", "rule": "기본 탭과 같은 원리: so를 몰라도 앞이 원인, that절이 결과. 심화 지문은 이 구문이 지문 전체의 논지를 뒤집는 결정적 문장으로 쓰이는 경우가 많다.", "ex": "No one is <b>so</b> foolish as to believe <b>that</b> there are any real accidents, in the sense of events which have no cause.", "tr": "원인 없는 사건이라는 의미의 진짜 우연이 존재한다고 믿을 만큼 어리석은 사람은 아무도 없다.", "expl": "so foolish as to(너무 어리석어서 ~라고 믿다) 자체가 이중 부정 느낌의 강조 구문이다. '아무도 그렇게 믿지 않는다' = '모든 사건에는 원인이 있다'는 강한 긍정 주장으로 뒤집어 읽어야 한다.", "shared": true, "claude_ex": [{"label": "So ~ that (심화 적용)", "en": "The evidence was <g>so weak that</g> <g>no one took the theory seriously</g>.", "tr": "그 증거가 너무 약해서 아무도 그 이론을 진지하게 받아들이지 않았다.", "note": "so 앞(증거가 약함)이 원인, that 뒤(진지하게 안 받아들임)가 결과다. 결과 부분을 초록으로 표시했다."}]}, {"cat": "기본과 겹침 (심화 적용)", "head": "반복 표현 / Paraphrasing [기본 표제어]", "rule": "기본 탭의 반복 표현과 같은 원리지만, 심화에서는 같은 개념이 비유·전문용어·일상어를 오가며 훨씬 큰 폭으로 바뀐다.", "ex": "boundless ocean of truth / the sea of literature / a pathless immensity — 전부 '인간이 다 알 수 없는 지식의 총량'을 가리키는 하나의 개념이다.", "tr": "끝없는 진실의 바다 / 문학의 바다 / 길 없는 광막함.", "expl": "세 표현이 문자 그대로는 전혀 다른 대상(바다, 문학, 광막함)을 가리키는 것처럼 보이지만, 이 지문 안에서는 전부 같은 하나의 은유적 개념이다. 심화 지문의 패러프레이징은 동의어 수준이 아니라 통째로 다른 이미지로 갈아타므로, '이게 결국 같은 얘기 아닌가?'를 계속 의심하며 읽어야 한다.", "shared": true, "claude_ex": [{"label": "반복표현 (심화 적용)", "en": "The scientist valued <g>precision</g> above all else. This obsession with <g>getting every detail exactly right</g> defined her whole career.", "tr": "그 과학자는 무엇보다도 정밀함을 소중히 여겼다. 모든 세부 사항을 정확히 맞추는 것에 대한 이 집착이 그녀의 커리어 전체를 정의했다.", "note": "'precision'과 'getting every detail exactly right'는 다른 표현이지만 같은 개념이다. 둘 다 초록으로 표시했다 — 심화에서는 이 치환의 폭이 훨씬 커진다."}]}, {"cat": "심화 전용 구문", "head": "Out of nowhere", "rule": "'느닷없이, 별안간' — out of(속에서 밖으로)의 원뜻 응용. 강사가 최근 답 선지(①~⑤)에 자주 쓰인다고 명시적으로 강조한 표현.", "ex": "<b>Seemingly out of nowhere</b>, a full-page newspaper ad appeared with an unadorned automobile image.", "tr": "겉보기에 느닷없이, 꾸미지 않은 자동차 이미지를 담은 전면 신문 광고가 나타났다.", "expl": "'아무 데도 없던 곳에서 나옴' → 예고 없이 갑자기 발생했다는 뜻. 이 표현 자체가 답의 핵심 내용이라기보다, 최근 오답/정답 선지에 자주 쓰이는 표현이라 뜻만 정확히 알아두면 선지 판단이 빨라진다.", "freq": true, "claude_ex": [{"label": "Out of nowhere", "en": "We were having a quiet dinner when, <g>out of nowhere</g>, the fire alarm went off.", "tr": "우리가 조용히 저녁을 먹고 있는데, 느닷없이 화재경보기가 울렸다.", "note": "out of nowhere가 '예고 없이 갑자기'라는 뜻이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "-voc-/-vok- 어원 (call, 부르다)", "rule": "vocal(목소리의), vocabulary(어휘), advocate(옹호하다=편을 불러주다), provoke(자극하다=밖으로 불러내다) — 전부 '부르다'라는 하나의 어원에서 파생된다.", "ex": "All of this <b>provoked</b> a great deal of anxiety among people from every social class.", "tr": "이 모든 것이 모든 사회 계층 사람들 사이에서 엄청난 불안을 불러일으켰다.", "expl": "provoke를 'pro(밖으로)+voke(부르다)' = '밖으로 불러내다 → 유발하다, 자극하다'로 분해하면 뜻이 저절로 나온다. vocal, vocabulary, advocate 전부 같은 뿌리에서 나온 가족어이므로 하나를 알면 나머지도 쉽게 유추된다.", "claude_ex": [{"label": "-vok- 어원", "en": "Her speech about climate change <g>provoked</g> a heated discussion among the students.", "tr": "기후 변화에 대한 그녀의 연설은 학생들 사이에서 열띤 토론을 불러일으켰다.", "note": "provoke = pro(밖으로)+voke(부르다) = 밖으로 불러내다 = 유발하다. 그 동사 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Better off", "rule": "'~하는 게 (형편이) 더 낫다' — 비교급 관용 표현. 여러 지문에서 반복적으로 확인됨 (grief, purpose, obstacle 관련 지문 등).", "ex": "One may be <b>better off</b> imagining how to surmount obstacles instead of ignoring them.", "tr": "장애물을 무시하는 것보다는 그것을 어떻게 극복할지 상상하는 편이 더 낫다.", "expl": "better off 뒤에 오는 행동(장애물 극복을 상상하기)이 대안(무시하기)보다 낫다는 저자의 권고다. 여러 지문에서 반복 확인된 만큼, '~하는 편이 낫다'는 권고·결론 문장에 자주 등장하는 신호로 봐도 된다.", "freq": true, "claude_ex": [{"label": "Better off", "en": "You'd be <g>better off asking for help</g> than struggling alone all night.", "tr": "밤새 혼자 씨름하는 것보다는 도움을 요청하는 게 더 나을 것이다.", "note": "better off 뒤가 더 나은 대안이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Draw on", "rule": "'~을 이용하다, ~에 의지하다' — 물을 길어 쓰듯 자원·경험을 끌어다 쓴다는 이미지. 여러 지문에서 반복 확인됨.", "ex": "Designers <b>draw on</b> their experience of design when approaching a new project.", "tr": "디자이너들은 새 프로젝트에 접근할 때 자신의 디자인 경험을 활용한다.", "expl": "draw(끌어당기다)+on(그 위에서) = '가진 자원 위에서 끌어다 쓰다'로 이해하면 암기 없이 뜻이 나온다. 경험, 지식, 자원을 활용한다는 문맥에서 반복적으로 쓰인다.", "claude_ex": [{"label": "Draw on", "en": "To solve the puzzle, she had to <g>draw on everything she had learned in science class</g>.", "tr": "그 퍼즐을 풀기 위해, 그녀는 과학 수업에서 배운 모든 것을 활용해야 했다.", "note": "draw on 뒤가 끌어다 쓰는 자원(배운 지식)이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Come up with", "rule": "'~을 생각해내다, 내놓다' — 아이디어나 해결책을 새로 만들어 제시한다는 뜻.", "ex": "There was social pressure for art to <b>come up with</b> some new vocation.", "tr": "예술이 새로운 존재 이유를 새롭게 만들어내야 한다는 사회적 압박이 있었다.", "expl": "come up(위로 떠오르다)+with(그것을 가지고) = '아이디어가 떠올라서 그것을 들고 나오다'는 이미지로 이해하면 된다. 새로운 해결책·아이디어를 제시하는 문맥에서 자주 쓰인다.", "claude_ex": [{"label": "Come up with", "en": "After hours of thinking, he finally <g>came up with a clever solution</g>.", "tr": "몇 시간 동안 생각한 끝에, 그는 마침내 영리한 해결책을 생각해냈다.", "note": "come up with 뒤가 새로 만들어낸 아이디어다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Go begging", "rule": "'원하는 사람이 없어 남아돌다' — 수요가 없어 방치된다는 뜻의 관용구. 흔치는 않지만 실제 지문에서 반복 확인됨.", "ex": "When employers are biased, capable candidates and jobs <b>go begging</b>.", "tr": "고용주들이 편견을 가지면, 유능한 지원자와 일자리가 (서로 짝을 못 찾고) 남아돈다.", "expl": "'구걸하러 다니다' 즉 '아무도 안 데려가서 계속 구걸 상태로 남아있다'는 이미지로 '수요가 없어 방치된다'는 뜻이 된다. 자원의 불일치·비효율을 설명할 때 쓰인다.", "rare": true, "claude_ex": [{"label": "Go begging", "en": "Because the job paid so little, the position <g>went begging</g> for months.", "tr": "그 일자리는 급여가 너무 적어서, 몇 달 동안 지원자가 없어 비어 있었다.", "note": "go begging이 '원하는 사람이 없어 남아돌다'라는 뜻이다. 그 부분을 초록으로 표시했다."}]}, {"cat": "심화 전용 구문", "head": "Two-edged sword (양날의 검)", "rule": "'양날의 검' — 한 가지 일이 이익과 손해를 동시에 가져온다는 뜻의 비유. 장단점이 공존하는 대상을 설명할 때 쓰인다.", "ex": "Such development is always a <b>two-edged sword</b>.", "tr": "그러한 발전은 언제나 양날의 검이다.", "expl": "이 표현이 나오면 바로 뒤나 앞에 '좋은 점'과 '나쁜 점'이 쌍으로 제시된다는 신호다. 장단점이 함께 오는 대상을 설명하는 지문에서 반복적으로 쓰이는 비유다.", "claude_ex": [{"label": "Two-edged sword", "en": "Social media is a <g>two-edged sword</g> — it connects people but can also spread rumors fast.", "tr": "소셜 미디어는 양날의 검이다 — 사람들을 연결해주지만 소문도 빠르게 퍼뜨릴 수 있다.", "note": "two-edged sword가 장단점이 공존한다는 비유다. 그 표현 자체를 초록으로 표시했다."}]}], final: [{"cat": "최종 전용 구문", "head": "Even if (semi-factual: 반사실 가정에도 결과 불변)", "rule": "if절로 사실과 다른 가정을 해도, 결론은 사실 그대로 유지된다는 구조. '가정을 바꿔도 결과는 같다'는 게 핵심 주장.", "ex": "<b>Even if</b> he had managed to walk to the village, he still would have died.", "tr": "설령 그가 마을까지 걸어갈 수 있었다 하더라도, 그는 여전히 죽었을 것이다.", "expl": "실제로는 마을에 도착하지 못하고 죽었는데, '마을에 도착했다 해도'라는 반사실 가정을 해도 결론(죽음)은 똑같다. 이런 구조가 나오면 '조건을 바꿔도 결과는 안 바뀐다'는 게 글쓴이의 핵심 주장이다.", "claude_ex": [{"label": "Even if (semi-factual)", "en": "<g>Even if he had left earlier, he still would have missed the train</g>.", "tr": "설령 그가 더 일찍 출발했다 하더라도, 그는 여전히 기차를 놓쳤을 것이다.", "note": "'더 일찍 출발했다면'이라는 가정을 바꿔도 결론(기차를 놓침)은 똑같다. 문장 전체를 초록으로 표시했다 — if절을 빼도 핵심 결론이 그대로 남는지 확인하는 게 이 구문의 핵심 테스트다."}]}, {"cat": "최종 전용 구문", "head": "Attribute A to B / Ascribe A to B", "rule": "원뜻은 'A를 B에게 주다' → 'A를 B의 탓으로 돌리다, A가 B 때문이라고 보다'. 두 동사는 완전히 같은 뜻으로 쓰인다.", "ex": "People <b>attribute</b> their success <b>to</b> luck rather than effort.", "tr": "사람들은 자신의 성공을 노력보다는 운 덕분이라고 여긴다.", "expl": "attribute A to B를 '탓으로 돌리다'로만 외우면 성공(긍정적 결과)에는 어색해진다. '주다'라는 원뜻으로 이해하면 '성공이라는 공을 운에게 준다'는 식으로 긍정·부정 문맥 모두에 자연스럽게 적용된다.", "claude_ex": [{"label": "Attribute A to B", "en": "She <g>attributed her success to</g> years of quiet practice, not talent.", "tr": "그녀는 자신의 성공을 재능이 아니라 수년간의 조용한 연습 덕분이라고 여겼다.", "note": "attribute A to B 전체가 'A를 B 덕분/탓으로 보다'라는 뜻이므로 그 구절 전체를 초록으로 표시했다."}]}, {"cat": "최종 전용 구문", "head": "-pel / -pulse 어원 (drive, 몰다)", "rule": "dispel(쫓아내다), expel(추방하다), propel(추진하다), compel(강요하다), repel(격퇴하다) — 전부 '몰다, 밀다'라는 하나의 어원에서 나온 가족어.", "ex": "The strong odor was enough to <b>repel</b> most insects.", "tr": "그 강한 냄새는 대부분의 곤충을 쫓아내기에 충분했다.", "expl": "re(뒤로)+pel(몰다) = '뒤로 몰아내다' → 격퇴하다, 쫓아내다. 접두사(dis-, ex-, pro-, com-, re-)만 바꿔가며 같은 어원을 기억하면 다섯 단어를 따로 외울 필요가 없다.", "claude_ex": [{"label": "-pel 어원", "en": "The strong smell of garlic was enough to <g>repel</g> the mosquitoes.", "tr": "강한 마늘 냄새는 모기를 쫓아내기에 충분했다.", "note": "repel = re(뒤로)+pel(몰다) = 뒤로 몰아내다 = 쫓아내다. 그 동사 부분을 초록으로 표시했다."}]}, {"cat": "최종 전용 구문", "head": "Counter-intuitive", "rule": "'직관에 반하는' — counter(반대)+intuitive(직관적인). 상식적으로 예상한 것과 정반대 결과가 나올 때 쓰인다. 정답 선지로 자주 등장.", "ex": "It seems <b>counter-intuitive</b> that the newcomers, less suited to the cold, defeated the natives who were already adapted to it.", "tr": "추위에 덜 적합했던 이주민들이 이미 적응해 있던 원주민들을 이겼다는 것은 직관에 반하는 것처럼 보인다.", "expl": "상식(적응한 쪽이 유리하다)과 실제 결과(적응 못 한 쪽이 이겼다)가 정반대이므로 counter-intuitive다. 이 단어가 나오면 바로 뒤에 그 반전을 설명하는 진짜 이유가 이어진다.", "claude_ex": [{"label": "Counter-intuitive", "en": "It sounds <g>counter-intuitive</g>, but sometimes taking a break makes you more productive.", "tr": "직관에 반하는 것처럼 들리지만, 때로는 쉬는 것이 너를 더 생산적으로 만든다.", "note": "counter-intuitive가 '상식과 반대'라는 뜻이다. 그 단어를 초록으로 표시했다 — 이 단어 뒤에는 항상 그 반전을 설명하는 이유가 이어진다."}]}] };
+const TAB_LABELS = { basic: '논리 독해 표제어 (기본)', adv: '논리 독해 표제어 (심화)', final: '논리 독해 표제어 (최종)' };
+const TAB_SUBS = {
+  basic: '문장을 원인·결과·대조·강조·양보 신호로 먼저 분류하고, 모르는 단어가 나와도 이 신호로 의미를 추론하는 훈련용 자료.',
+  adv: '심화는 새 문법을 배우는 게 아니라, 비유·치환·도치·생략으로 위장된 문장에서 같은 논리 원리를 더 빠르게 찾아내는 훈련. 보라색 배지는 기본 탭과 겹치는 핵심 원리를 더 어려운 지문으로 재적용한 것.',
+  final: '최종은 새 연결어를 거의 안 가르칩니다. 기본·심화에서 배운 논리 도구를 초고난도 지문·초고속으로 적용하는 과정이라 표제어 수가 적어요. 계속 추가될 예정입니다.'
+};
+
+let currentTab = 'basic';
+let activeCat = null;
+let query = '';
+let weakOnly = false;
+const openState = {};
+
+// localStorage 안전 래퍼: Claude 미리보기 등 localStorage가 막힌 환경에서는 메모리로 대체
+let weakSet = new Set();
+let storageOK = true;
+try {
+  const saved = localStorage.getItem('logic_reading_weak_items');
+  if (saved) weakSet = new Set(JSON.parse(saved));
+} catch (e) { storageOK = false; }
+
+function saveWeak() {
+  try { localStorage.setItem('logic_reading_weak_items', JSON.stringify([...weakSet])); }
+  catch (e) { storageOK = false; }
+}
+
+function weakKey(tab, item) { return tab + '::' + item.head; }
+
+function getData() { return DATA[currentTab]; }
+
+function switchTab(tab) {
+  currentTab = tab;
+  activeCat = null;
+  document.getElementById('tab-basic').classList.toggle('active', tab === 'basic');
+  document.getElementById('tab-adv').classList.toggle('active', tab === 'adv');
+  document.getElementById('tab-final').classList.toggle('active', tab === 'final');
+  document.getElementById('legend-shared').style.display = (tab === 'adv') ? 'flex' : 'none';
+  document.getElementById('pagetitle').textContent = TAB_LABELS[tab];
+  document.getElementById('pagesub').textContent = TAB_SUBS[tab];
+  render();
+}
+
+function renderChips() {
+  const chipsEl = document.getElementById('chips');
+  const DATA_ARR = getData();
+  const categories = [...new Set(DATA_ARR.map(d => d.cat))];
+  chipsEl.innerHTML = '';
+  const allChip = document.createElement('div');
+  allChip.className = 'chip' + (activeCat === null ? ' active' : '');
+  allChip.textContent = '전체';
+  allChip.onclick = () => { activeCat = null; render(); };
+  chipsEl.appendChild(allChip);
+
+  const weakChip = document.createElement('div');
+  weakChip.className = 'chip weak-chip' + (weakOnly ? ' active' : '');
+  weakChip.textContent = '내 약점만 ☑';
+  weakChip.onclick = () => { weakOnly = !weakOnly; render(); };
+  chipsEl.appendChild(weakChip);
+
+  categories.forEach(cat => {
+    const count = DATA_ARR.filter(d => d.cat === cat).length;
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (activeCat === cat ? ' active' : '');
+    chip.textContent = cat + ' ' + count;
+    chip.onclick = () => { activeCat = (activeCat === cat ? null : cat); render(); };
+    chipsEl.appendChild(chip);
+  });
+}
+
+function matchesQuery(item, q) {
+  if (!q) return true;
+  const hay = (item.head + ' ' + item.rule + ' ' + item.ex + ' ' + item.tr).toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function hasActiveSelection() {
+  const sel = window.getSelection();
+  return sel && sel.toString().length > 0;
+}
+
+function render() {
+  renderChips();
+  const DATA_ARR = getData();
+  const listEl = document.getElementById('list');
+  listEl.innerHTML = '';
+
+  let filtered = DATA_ARR.filter(d =>
+    (activeCat === null || d.cat === activeCat) &&
+    matchesQuery(d, query) &&
+    (!weakOnly || weakSet.has(weakKey(currentTab, d)))
+  );
+
+  document.getElementById('empty').style.display = filtered.length === 0 ? 'block' : 'none';
+  document.getElementById('stat-total').textContent = '전체 ' + filtered.length + '개';
+  document.getElementById('stat-cat').textContent = [...new Set(DATA_ARR.map(d => d.cat))].length + '개 범주';
+  const weakCountThisTab = DATA_ARR.filter(d => weakSet.has(weakKey(currentTab, d))).length;
+  document.getElementById('stat-weak').textContent = '내 약점 ' + weakCountThisTab + '개';
+
+  let currentCat = null;
+  filtered.forEach((item) => {
+    const globalIdx = currentTab + '_' + DATA_ARR.indexOf(item);
+    const wKey = weakKey(currentTab, item);
+    if (item.cat !== currentCat) {
+      currentCat = item.cat;
+      const catTitle = document.createElement('div');
+      catTitle.className = 'cat-title';
+      catTitle.textContent = currentCat;
+      listEl.appendChild(catTitle);
+    }
+
+    const itemEl = document.createElement('div');
+    itemEl.className = 'item' + (openState[globalIdx] ? ' open' : '') + (item.rare ? ' rare' : '') + (item.freq ? ' freq' : '') + (item.shared ? ' shared' : '') + (weakSet.has(wKey) ? ' weak' : '');
+
+    const headRow = document.createElement('div');
+    headRow.className = 'head-row';
+
+    const headLeft = document.createElement('div');
+    headLeft.className = 'head-left';
+
+    const checkbox = document.createElement('div');
+    checkbox.className = 'weak-check' + (weakSet.has(wKey) ? ' checked' : '');
+    checkbox.textContent = weakSet.has(wKey) ? '✓' : '';
+    checkbox.title = '내 약점으로 표시';
+    checkbox.onclick = (e) => {
+      e.stopPropagation();
+      if (weakSet.has(wKey)) weakSet.delete(wKey); else weakSet.add(wKey);
+      saveWeak();
+      render();
+    };
+    headLeft.appendChild(checkbox);
+
+    const headwordSpan = document.createElement('span');
+    headwordSpan.className = 'headword';
+    headwordSpan.innerHTML = item.head +
+      (item.rare ? '<span class="rare-tag">저빈도</span>' : '') +
+      (item.freq ? '<span class="freq-tag">고빈도</span>' : '') +
+      (item.shared ? '<span class="shared-tag">기본 겹침</span>' : '');
+    headLeft.appendChild(headwordSpan);
+
+    headRow.appendChild(headLeft);
+
+    const caret = document.createElement('span');
+    caret.className = 'caret';
+    caret.textContent = '▶';
+    headRow.appendChild(caret);
+
+    headRow.onclick = () => {
+      if (hasActiveSelection()) return;
+      openState[globalIdx] = !openState[globalIdx];
+      render();
+    };
+    itemEl.appendChild(headRow);
+
+    const detail = document.createElement('div');
+    detail.className = 'detail';
+
+    const ruleBox = document.createElement('div');
+    ruleBox.className = 'rule-box';
+    ruleBox.innerHTML = '<div class="rule-label">규칙</div>' + item.rule;
+    detail.appendChild(ruleBox);
+
+    const exKey = globalIdx + '_ex';
+    const exBox = document.createElement('div');
+    exBox.className = 'example-box' + (openState[exKey] ? ' open' : '');
+    exBox.innerHTML =
+      '<div class="ex-en">' + item.ex + '</div>' +
+      '<div class="ex-expl"><div class="expl-label">해설</div>' + item.expl + '</div>' +
+      (item.claude_ex ? item.claude_ex.map(function(c) {
+        return '<div class="claude-box">' +
+          '<div class="claude-label">클로드) ' + c.label + '</div>' +
+          '<div class="claude-en">' + c.en.replace(/<g>/g, '<span class="green-part">').replace(/<\/g>/g, '</span>') + '</div>' +
+          '<div class="claude-tr">' + c.tr + '</div>' +
+          '<div class="claude-note">' + c.note + '</div>' +
+        '</div>';
+      }).join('') : '') +
+      '<div class="ex-toggle"><span class="caret2">▾</span></div>' +
+      '<div class="ex-tr"><div class="tr-label">해석</div>' + item.tr + '</div>';
+    exBox.onclick = (e) => {
+      if (hasActiveSelection()) return;
+      e.stopPropagation();
+      openState[exKey] = !openState[exKey];
+      render();
+    };
+    detail.appendChild(exBox);
+
+    itemEl.appendChild(detail);
+    listEl.appendChild(itemEl);
+  });
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  query = e.target.value;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
